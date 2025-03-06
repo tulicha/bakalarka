@@ -1,32 +1,28 @@
-LaTeX template for theses at FIT CTU
+BAKALÁŘKA -- VPP
 ===================================
-
-[![pipeline status](https://gitlab.fit.cvut.cz/theses-templates/FITthesis-LaTeX/badges/master/pipeline.svg)](https://gitlab.fit.cvut.cz/theses-templates/FITthesis-LaTeX/commits/master)
-
 
 About
 -----
 
-Recommended template for theses submitted at [Faculty of Information Technology](https://fit.cvut.cz) at [Czech Technical University in Prague](https://cvut.cz). For use with XeLaTeX or LuaLaTeX.
-
+Moje bakalářská práce. FIT 2025
 
 Version
 --------
-1.3.10, built 27. 2. 2025. The whole changelog can be found in the [Changelog file](changelog.md).
+TBD
 
 
-Bugs and support
+Chyby
 --------
+TBD
 
-Please submit bug reports using [issues](https://gitlab.fit.cvut.cz/theses-templates/FITthesis-LaTeX/issues).
 
-Current maintainers
+Author
 -------------------
 
-* [Tomáš Nováček](https://usermap.cvut.cz/profile/novacto3)
+* [Ondřej Slavík](https://usermap.cvut.cz/profile/0472cfbd-4c10-4575-a180-adb3e0318a63)
 
-Previous maintainers
+TODO
 -------------------
+- Udělat todo
+- TBD
 
-* [Ondřej Guth](https://usermap.cvut.cz/profile/guthondr)
-* [Eliška Šestáková](https://usermap.cvut.cz/profile/sestaeli)
