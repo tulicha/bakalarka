@@ -89,12 +89,27 @@ Vectorized packet processing and specific coding practices can take full advanta
 
 \end{itemize}
 
-%3. Architektura VPP
-%    Graph-based processing (každý uzel dělá specifický úkol)
-%    Vector processing (zpracování více paketů najednou)
-%    Modulární design (pluginy, uzly, feature arcs)
-%    Vnitřní struktura paketů (VLIB buffer, node graph)
-%    Využití DPDK (přímý přístup na NIC)
+\subsection{VPP Processing Graph and Graph nodes}
+At the core of VPP (Vector Packet Processing) lies the Packet Processing Graph, a directed graph composed of relatively small, modular \& loosely coupled nodes. 
+Each node is designed to perform a specific task and there are 3 types of them: \textit{process}, \textit{input} \& \textit{internal}. 
+Process nodes do not participate in the packet forwarding graph; instead, they handle timers, events, and other background tasks within the VPP runtime.
+Input nodes are used for input of data and internal nodes are used for vector processing. Internal nodes also serves as output nodes. 
+When a vector of packets is prepared by input node, it is then pushed through the internal nodes. 
+During processing, the vector may be split if the batch contains packets of different protocols or types, as they may need to follow different paths through the graph
+When the original vector is completely processed, the process repeats.
+Illustration of this Processing Graph is shown in fig. \ref{fig:processing-graph}.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/processing-graph.jpg}
+    \caption{Picture showing the VPP Processing Graph~\cite{LINGUAGLOSSA}}
+    \label{fig:processing-graph}
+\end{figure}
+
+Thanks to VPP's modular design, the processing graph is highly customizable and extensible. 
+New nodes -- referred to as plugins -- can be easily added to implement specific functionality or repleace existing ones. 
+Plugins are shared libraries that are loaded during startup of VPP, and they are not dependent on the VPP source code, allowing them to be developed independently. 
+Moreover, existing nodes can be rewired to modify the packet processing logic when necessary.\cite{LINGUAGLOSSA, DR:COMMAG-18, fdio_vpp_extensible_2021}
 
 
 

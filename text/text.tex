@@ -1,19 +1,74 @@
 % Do not forget to include Introduction
 %---------------------------------------------------------------
-\chapter{Introduction}
+%\chapter{Introduction}
 % uncomment the following line to create an unnumbered chapter
-%\chapter*{Introduction}\addcontentsline{toc}{chapter}{Introduction}\markboth{Introduction}{Introduction}
+\chapter*{Introduction}\addcontentsline{toc}{chapter}{Introduction}\markboth{Introduction}{Introduction}
 %---------------------------------------------------------------
 \setcounter{page}{1}
 
 % The following environment can be used as a mini-introduction for a chapter. Use that any way it pleases you (or comment it out). It can contain, for instance, a summary of the chapter. Or, there can be a quotation.
-\begin{chapterabstract}
-	\lipsum[1]
-\end{chapterabstract}
+%\begin{chapterabstract}
+%\end{chapterabstract}
 
-\lipsum[2][1-4]{} [1]
+Modern high-performance network devices are usually proprietary systems that combine custom hardware, specialized operating systems, and tightly coupled software. 
+While these solutions offer high throughput and reliability, they are typically expensive, inflexible, and slower to evolve due to their closed design and development model.
+Vector Packet Processing (VPP) is a high-performance network stack that operates at layers 2 to 4 of the ISO/OSI model. 
+It was originally developed by Cisco Systems, Inc. (which is a world leader in networking) and open-sourced in 2016 under the Fast Data Project (FD.io), that is part of the Linux Foundation.
+VPP brings the ability to perform efficient, high-speed packet processing on common off-the-shelf (COTS) hardware, across a wide range of platforms and operating systems.
+Its open and flexible architecture opens the door to a new class of network applications that can be deployed and scaled more easily than traditional hardware appliances. 
+In this way, VPP could represent a shift in the traditionally conservative networking world, echoing the "Mainframe to PC" revolution, 
+where general-purpose systems replaced proprietary platforms, enabling broader innovation and accessibility.
 
-\lipsum[4]
+Since VPP was open-sourced only recently, it has not yet been widely adopted by the market, and there are only a limited number of academic studies on the subject. As a result, this area remains underexplored. 
+This thesis aims to contribute to this field by evaluating VPP's\footnote{The abbreviation VPP is also commonly used in academic literature to refer to a Virtual Power Plant.} performance, 
+with a particular focus on its electricity consumption. 
+The findings could provide valuable insights for the industry and guide future research, especially in light of the increasing importance of energy efficiency, 
+as highlighted in recent forecasts by ČEPS a.s. regarding the future of energy resources in the Czech Republic.
+
+With the development of AI and the growing demand for high-resolution streaming services, it is highly likely that the demand for internet bandwidth will continue to rise. 
+This will result in an increased need for network equipment capable of processing larger volumes of data more efficiently. 
+Therefore, it is crucial to explore technologies like VPP that are capable to handle this growing demand and to explore their energy efficiency.
+
+This thesis is divided into two parts: Theoretical and Practical. 
+The Theoretical part presents the traditional approach to networking and packet processing, as well as an overview of how VPP is designed and the principles on which it operates. Additionally, it introduces the testing scenarios used. 
+The Practical part describes the testing infrastructure, presents the results of various measurements, and provides an analysis of the findings.
+
+%---------------------------------------------------------------
+\chapter{Theoretical part}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\section{"Vector Packet Processing (VPP) and Its Operating Principles}
+%---------------------------------------------------------------
+\input{text/chapters/principles.tex}
+%---------------------------------------------------------------
+\section{Implementation of Vector Packet Processing}
+%---------------------------------------------------------------
+Popsat implementaci VPP
+
+
+
+%---------------------------------------------------------------
+\chapter{Pratical part}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\section{Building Infrastructure for Measurement}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\section{Test Scenarios \& Results}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsection{Scenario \#1a}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\section{Presentation and Analysis of Results}
+%---------------------------------------------------------------
+
+
 
 %---------------------------------------------------------------
 \section{Ut enim ad minim veniam}
