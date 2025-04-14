@@ -1,0 +1,65 @@
+The testing infrastructure has been implemented as recomended in RFC 2544, which defines methods for evaluating network performance. 
+It consists of a device under test (DUT), connected to a measurement device called \textit{Tester}.\footnote{The hardware used in this testing setup was loaned free of charge for the purposes of this bachelor thesis by Silicon Hill club.}.
+In line with the more modern RFC 8219, which states that: ``All tests described SHOULD be performed with bidirectional traffic''~\cite{RFC8219}, the infrastructure is designed to operate with bidirectional traffic. 
+This approach ensures more accurate performance measurement under real-world network conditions, as opposed to unidirectional traffic.
+The Device Under Test (DUT) and the measurement device are connected using 100Gbit capable cables, preventing any potential bottlenecks in the connection.
+The illustration of this hardware setup is shown in fig. \ref{fig:hardware-setup}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/setup.png}
+    \caption{Picture showing hardware setup}
+    \label{fig:hardware-setup}
+\end{figure}
+
+The Device Under Test (DUT) is the network device being evaluated during testing. 
+It is configured with a specific network stack and settings based on measurement scenario 
+and serves as the focus of performance and behavior analysis in a controlled test environment. 
+The DUT is responsible for processing network traffic and responding to the test conditions set by the measurement device.
+Additionally, the electrical power consumption of the DUT is monitored and measured during the tests to assess its energy efficiency under varying loads.
+The hardware of DUT is shown in table \ref{tab:hardware_dut}.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Hardware Component} & \textbf{DUT (Device Under Test)} \\
+\hline
+\textbf{CPU Model} & 2x Intel(R) Xeon(R) CPU E5-2660 v3 \\
+\hline
+\textbf{Frequency} & 2.60GHz \\
+\hline
+\textbf{Cores} & 10 physical cores each \\
+\hline
+\textbf{Memory (RAM)} & Size, type, speed \\
+\hline
+\textbf{Network Interface Cards (NIC)} & Mellanox ConnectX-6 Dx (Dual-port) \\
+\hline
+\end{tabular}
+\caption{Hardware details for DUT (Device Under Test)}
+\label{tab:hardware_dut}
+\end{table}
+
+The Tester (Measurement Device), on the other hand, is responsible in generating the network traffic and capturing the responses from the DUT.
+Its physical features are shown in table \ref{tab:hardware_tester}. 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Hardware Component} & \textbf{Tester (Measurement Device)} \\
+\hline
+\textbf{CPU Model} & Model, number of cores, frequency \\
+\hline
+\textbf{Frequency} & \\
+\hline
+\textbf{Cores} & \\
+\hline
+\textbf{Memory (RAM)} & Size, type, speed \\
+\hline
+\textbf{Network Interface Cards (NIC)} & Model, speed, number of ports \\
+\hline
+\end{tabular}
+\caption{Hardware details for Tester (Measurement Device)}
+\label{tab:hardware_tester}
+\end{table}
