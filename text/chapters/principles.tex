@@ -6,9 +6,9 @@ VPP is built on modern programming and architectural principles that allow maxim
 The section begins with a brief description of traditional network traffic processing methods used by operating systems and their limitations in terms of performance and scalability. 
 Following that, the architecture of VPP is explored in detail, explaining how packets are processed in vectors, the use of a node graph, 
 and the various techniques that contribute to its high efficiency—such as I/O and compute batching, zero-copy methods, and lock-free multi-threading. 
-The purpose of this section is to provide a theoretical foundation for understanding how VPP operates and where it can be effectively used.
+The purpose of this section is to provide a theoretical foundation for understanding how VPP operates.
 
-\subsection{Introduction to traditional network traffic processing}
+\subsection{Traditional network traffic processing}
 A \textit{network packet} is a basic unit of data transmitted over a network. It consists of a \textit{header}, which includes control information such as source and destination IP addresses, 
 and a \textit{payload}, which carries the actual user data. 
 Packets are routed independently through the network and reassembled at the destination. 
@@ -31,11 +31,8 @@ Another disadvantage of tradidtional packet processing is the inefficient handli
 interrupts leads to frequent cache misses in both cache \& inctruction caches.\footnote{kap. 4.2}\cite{cox2000profiling} 
 
 %-----------------------------------------------------
-\subsection{Vector Packet Processing: An Introduction}
+\subsection{An Introduction to VPP}
 
-%Co je VPP (Vector Packet Processing)
-%Kdo ho vyvíjí (např. FD.io)
-%Cíle a filosofie (výkon, modularita)
 Vector Packet Processing (VPP) is a multi-platform network stack that operates at layers 2-4 of the ISO/OSI model and is developed by the FD.io project. 
 It consists of a set of forwarding vertices arranged in an oriented graph and auxiliary software and provides out-of-the-box switch/router functionality.
 Unlike traditional network stacks, which run in the kernel, VPP operates in user space.
@@ -51,6 +48,9 @@ The design of VPP is agnostic to hardware, kernel, and deployment platform, mean
 This approach allows VPP to be deployed on widely available infrastructure without the need for specialized hardware.\cite{fdio_what_is_vpp}
 
 \subsection{Techniques used in VPP}
+
+DOPAST !!! Low-level code optimization technique
+
 According to Linguaglossa et al.\cite{LINGUAGLOSSA} VPP uses theese kernel-bypass techniques:
 
 \begin{itemize}
