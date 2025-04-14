@@ -32,5 +32,12 @@ Linux stack & 17 578 124 978 & 1 124 999 998 592 & 37 717.4 \\
 \label{tab:udp:one}
 \end{table}
 
+As the results in Table \ref{tab:udp:one} show, the power consumption increases notably with the number of worker threads in the VPP stack. 
+While all VPP configurations deliver identical packet and byte throughput, the most energy-efficient setup is this measurement is the single-worker variant, consuming roughly 25.4 kWh during the test. 
+In contrast, the traditional Linux network stack demonstrates the highest energy usage, despite handling the same volume of packets.
 
+This discrepancy can likely be attributed to the cost of processing a high number of small packets in kernel space. 
+Since the test uses fixed-size 64-byte packets, which are known to generate frequent system calls and context switches in Linux, 
+the forwarding path becomes less efficient compared to VPP’s user-space architecture, where such overheads are significantly reduced. 
+The results highlight the energy cost of kernel-based packet forwarding in scenarios dominated by small-packet traffic.
 
