@@ -1,0 +1,15 @@
+
+\subsection{VPP as a Complete Router Solution}
+Vector Packet Processing (VPP) is implemented solely as a data-plane, meaning it is not a complete routing solution on its own. 
+VPP is dedicated to efficiently forwarding packets between interfaces based on routing rules and access control filters, 
+but it does not include a native control-plane or support for dynamic routing protocols such as BGP or OSPF.
+
+However, as demonstrated by the authors of the VBSR (VPP-Bird Software Router) project \cite{10819057}, 
+it is possible to integrate VPP with additional components such as the Linux Control Plane (Linux-CP) plugin and the BIRD routing daemon. 
+Bird acting as a control-plane enables dynamic routing using protocols like BGP 
+and the Linux-CP is responsible for communication between VPP and BIRD 
+This integrated system creates a nearly feature-complete router solution, comparable in functionality to commercial routers.
+
+It is important to note, however, that firewall functionality is still limited and was left by authors of VBSR as a future work.\cite{10819057} 
+While VPP supports basic packet filtering through ACLs, it lacks advanced stateful firewall features\cite{fdio-vpp-features-2502}. These would need to be handled externally.
+

@@ -29,7 +29,7 @@ The hardware of DUT is shown in table \ref{tab:hardware_dut}.
 \hline
 \textbf{Frequency} & 2.60GHz \\
 \hline
-\textbf{Cores} & 10 physical cores each \\
+\textbf{Cores} & 10 physical cores each (one thread per core) \\
 \hline
 \textbf{Memory (RAM)} & Size, type, speed \\
 \hline
@@ -49,17 +49,21 @@ Its physical features are shown in table \ref{tab:hardware_tester}.
 \hline
 \textbf{Hardware Component} & \textbf{Tester (Measurement Device)} \\
 \hline
-\textbf{CPU Model} & Model, number of cores, frequency \\
+\textbf{CPU Model} & 2x Intel(R) Xeon(R) Gold 6136 CPU \\
 \hline
-\textbf{Frequency} & \\
+\textbf{Frequency} & 3.00GHz \\
 \hline
-\textbf{Cores} & \\
+\textbf{Cores} & 12 physical cores each (two threads per core)\\
 \hline
 \textbf{Memory (RAM)} & Size, type, speed \\
 \hline
-\textbf{Network Interface Cards (NIC)} & Model, speed, number of ports \\
+\textbf{Network Interface Cards (NIC)} & 2x Mellanox ConnectX-5 \\
 \hline
 \end{tabular}
 \caption{Hardware details for Tester (Measurement Device)}
 \label{tab:hardware_tester}
 \end{table}
+
+The DUT is running Debian GNU/Linux 12 (Bookworm) x86\_64 with Linux kernel version \textit{6.1.0-32-amd64}, VPP v25.02-release, and DPDK version 24.11.1.
+
+The tester is running \dots{}
