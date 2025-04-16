@@ -20,15 +20,15 @@ This enables a direct comparison between VPP and traditional kernel-based forwar
 \centering
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Configuration} & \textbf{TX Packets} & \textbf{TX Bytes} & \textbf{Watts used} \\
+\textbf{Configuration} & \textbf{Transmited packets} & \textbf{Transmited bytes} & \textbf{Watts used} \\
 \hline
-VPP -- 1 worker & 17 578 124 988 & 1 124 999 999 232 & 25 442.4 \\
-VPP -- 4 workers & 17 578 124 986 & 1 124 999 999 104 & 28 531 \\
-VPP -- 10 workers &  17 578 124 988 & 1 124 999 999 232 & 35 806.8 \\
-Linux stack & 17 578 124 978 & 1 124 999 998 592 & 37 717.4 \\
+VPP -- 1 worker & 17 578 124 988 & 1 124 999 999 232 & 848.08 \\
+VPP -- 4 workers & 17 578 124 986 & 1 124 999 999 104 & 951.03 \\
+VPP -- 10 workers &  17 578 124 988 & 1 124 999 999 232 & 1 193.56 \\
+Linux stack & 17 578 124 978 & 1 124 999 998 592 & 1 257.25 \\
 \hline
 \end{tabular}
-\caption{Result of Bidirectional UDP 1 Gbit/s test}
+\caption{Result of Bidirectional UDP 1 Gbit/s of 870-bytes packets test}
 \label{tab:udp:one}
 \end{table}
 
@@ -41,7 +41,7 @@ Since the test uses fixed-size 64-byte packets, which are known to generate freq
 the forwarding path becomes less efficient compared to VPP’s user-space architecture, where such overheads are significantly reduced. 
 The results highlight the energy cost of kernel-based packet forwarding in scenarios dominated by small-packet traffic.
 
-\subsection{Bidirectional UDP 1 Gbit/s of 64-bytes packets}
+\subsection{Bidirectional UDP 1 Gbit/s of 870-bytes packets}
 
 In this scenario, the DUT is subjected to a bidirectional UDP traffic load of 1\,Gbit/s (500+500\,Mbit/s) composed of 870-byte packets, 
 generated using a modified TRex \textit{udp\_1pkt\_src\_ip\_split.py} profile. 
@@ -60,14 +60,31 @@ This scenario provides insight into forwarding and energy efficiency under more 
 \centering
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Configuration} & \textbf{TX Packets} & \textbf{TX Bytes} & \textbf{Watts used} \\
+\textbf{Configuration} & \textbf{Transmited packets} & \textbf{Transmited bytes} & \textbf{Watts used} \\
 \hline
-VPP -- 1 worker & 1 293 103 500 & 1 125 000 045 000 & 24 695.9 \\
-VPP -- 4 workers &  &  & \\
-VPP -- 10 workers &  &  &  \\
-Linux stack &  &  &  \\
+VPP -- 1 worker & 1 293 103 500 & 1 125 000 045 000 & 823.20\\
+VPP -- 4 workers & 1 293 103 500 & 1 125 000 045 000 & 972.49\\
+VPP -- 10 workers & 1 293 103 500 & 1 125 000 045 000 & 1 170.26\\
+Linux stack & 1 293 103 500 & 1 125 000 045 000 & 946.28\\
 \hline
 \end{tabular}
-\caption{Result of Bidirectional UDP 1 Gbit/s test}
-\label{tab:udp:one}
+\caption{Result of Bidirectional UDP 1 Gbit/s of 870-bytes packets test}
+\label{tab:udp:two}
 \end{table}
+
+As shown in table \ref{tab:udp:two}, the second test with 870-byte packets, 
+VPP's power consumption remains relatively stable across different worker thread configurations, with a variation of only about ±5\% compared to previous measurement. 
+This indicates that VPP's performance and power consumption are consistent, regardless of the increased packet size. 
+On the other hand, the Linux stack's power consumption shows a positive reduction compared to the previous test, which is attributed to the lower number of packets being processed. 
+Since larger packets reduce the packet-per-second (PPS) rate, the system overhead and processing cost in Linux are lower, leading to more efficient energy usage in this scenario.
+
+
+
+
+
+
+
+
+
+
+
