@@ -1,3 +1,28 @@
+VPP supports a comprehensive set of Layer 2 to Layer 4 network features. 
+At Layer 2, it provides Ethernet bridging, MAC learning, VLAN tagging (including dot1q and QinQ), and support for L2 cross-connects and policers.
+
+At Layer 3, VPP implements both IPv4 and IPv6 routing with ECMP support, NAT44/NAT64, and ACL-based filtering. 
+It also supports tunneling mechanisms such as GTP-U, IP-in-IP, and VXLAN. Segment routing (SRv6), LISP, and punt redirect mechanisms are included as well.
+
+At the transport layer (L4), basic UDP and TCP stack functionality is available, 
+enabling packet forwarding and processing for a wide range of use cases within virtualized networking environments.
+
+Additionally, supported features include PPPoE, the WireGuard VPN protocol, GRE tunneling, DHCP client and proxy functionality, and L2TPv3.\cite{fdio-vpp-features-2502}
+
+According to the authors, VPP can be for example effectively utilized as a virtual switch, virtual router, gateway or used as a basis for a firewall, IDS and load balancer.\cite{fdio_what_is_vpp}
+It already includes enough features to be deployed in production environments.
+
+
+
+\subsection{Integration with the SDN/NFV Ecosystem}
+To meet the requirements of modern virtualized and cloud-native networking environments, Vector Packet Processing (VPP) was architected with a clear separation between the data plane and control plane. 
+This design choice enables its integration into SDN and NFV frameworks, where packet forwarding logic can operate independently from centralized control mechanisms. 
+VPP's modularity and userspace implementation allow it to function efficiently within dynamic, multi-tenant infrastructure, 
+while remaining compatible with orchestration systems and control-plane protocols commonly used in such deployments
+
+VPP is fully compatible with both Virtual Network Functions (VNFs) and Cloud-Native Network Functions (CNFs). 
+Its modular architecture allows deployment in environments utilizing service function chaining, Kubernetes-based orchestration, or OpenStack-based infrastructures. 
+Because of its userspace design and performance-optimized data plane, VPP can serve as the fast packet processing backend for SDN-controlled systems and NFV orchestrators.\cite{fdio2017whitepaper}
 
 \subsection{VPP as a Complete Router Solution}
 Vector Packet Processing (VPP) is implemented solely as a data-plane, meaning it is not a complete routing solution on its own. 

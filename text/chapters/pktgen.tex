@@ -1,13 +1,20 @@
-Although numerous traffic generation tools exist \cite{traffic-generators}, 
+In order to evaluate the performance of network devices and data-plane frameworks such as VPP, synthetic traffic must be generated in a controlled and reproducible manner. 
+Selecting appropriate traffic generation tools is therefore essential for conducting accurate benchmarking and stress-testing. Although numerous traffic generation tools exist \cite{traffic-generators}, 
 this section focuses on a subset commonly used for high-performance benchmarking and synthetic traffic generation in research and practice, namely iPerf3, D-ITG, TRex, Pktgen-DPDK \& Genesids. 
 
 \begin{itemize}
   \item \textbf{iPerf3} -- iPerf3 is a network testing tool used to measure TCP, UDP, and SCTP throughput between two endpoints. It allows detailed configuration of testing parameters such as buffer size, number of parallel streams, test duration, and jitter. iPerf3 can also measure jitter, providing insights into the variation in packet arrival times, which is useful for evaluating network stability. Its client-server architecture makes it a common tool for performance benchmarking of networks and devices.\cite{iperf}
+
+  \item \textbf{D-ITG} -- Distributed Internet Traffic Generator is a network traffic generator designed to produce traffic flows that accurately emulate a wide range of real-world application behaviors. It supports multiple transport layer protocols, including TCP, UDP, DCCP, and SCTP. D-ITG allows users to define parameters such as packet size, inter-departure time, and number of flows, making it suitable for controlled experiments on delay, jitter, packet loss, and throughput. It can operate in both single-node and distributed modes, enabling flexible deployment for testing complex topologies and performance conditions. D-ITG also includes tools for logging and analyzing the generated traffic, facilitating detailed post-experiment evaluation.\cite{DITGManual}
 
   \item \textbf{TRex} -- TRex, developed by Cisco, is a high-performance, stateful and stateless traffic generator built on top of DPDK. It supports the generation of realistic Layer 4–7 traffic using pre-recorded PCAP files and emulates multiple concurrent users and flows. TRex is especially suited for benchmarking network function virtualization (NFV) platforms, routers, and firewalls in both laboratory and production-like environments.\cite{trex} 
 
 \item \textbf{Pktgen-DPDK} -- Pktgen-DPDK is a high-performance traffic generator tool developed as part of the Data Plane Development Kit (DPDK). Pktgen-DPDK supports various network protocols, including IPv4, IPv6, UDP, and TCP. The tool allows precise control over traffic parameters, such as packet rate, size, and timing. Pktgen-DPDK is used in network performance tests and can capture packet-level statistics to assess the performance of the devices under test.\cite{pktgen_dpdk} 
 \end{itemize}
 
-
+Among the reviewed tools, the author decided to utilize iPerf3 and TRex in the subsequent experimental evaluation. 
+IPerf3 was selected due to its status as a de facto standard for basic throughput and jitter measurements, ease of use, and widespread adoption in academic and practical contexts. 
+TRex was chosen for its modern architecture, support for high-speed stateful and stateless traffic generation, ability to simulate real-world traffic. 
+In addition, TRex provides a Python-based API that enables scripting and automation of test scenarios, making it well-suited for integration into continuous testing pipelines and reproducible experiments. 
+Other tools, such as Pktgen-DPDK and D-ITG, were excluded due to their relatively complex usage (Pktgen-DPDK) or limited maintenance and outdated design (D-ITG).
 
