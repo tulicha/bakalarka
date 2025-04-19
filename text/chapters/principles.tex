@@ -121,6 +121,31 @@ New nodes -- referred to as plugins -- can be easily added to implement specific
 Plugins are shared libraries that are loaded during startup of VPP, and they are not dependent on the VPP source code, allowing them to be developed independently. 
 Moreover, existing nodes can be rewired to modify the packet processing logic when necessary.\cite{LINGUAGLOSSA, DR:COMMAG-18, fdio_vpp_extensible_2021}
 
+%--------------------------------------------------------------------
+\subsection{DPDK and Its Role in VPP}
+The Data Plane Development Kit (DPDK) is an open-source collection of libraries and drivers designed to support high-speed packet processing in user space. 
+It was initially developed by Intel in 2010 and is now maintained as a Linux Foundation project. 
+DPDK provides a set of APIs and components that allow applications to bypass the kernel network stack and directly access network interface cards (NICs) 
+through poll-mode drivers (PMD), significantly reducing the overhead associated with traditional packet handling mechanisms.\cite{dpdk_about}
 
+The DPDK completely bypasses the kernel, communicating directly with the NIC.
+DPDK avoids the use of the kernel’s system calls, instead handling its own I/O synchronization and memory management. 
+DPDK employs a PMD that uses busy-polling to retrieve, process, and deliver network packets to user-space applications without relying on interrupts. 
+While this approach enhances performance by reducing latency, 
+it also results in high CPU utilization, with the CPU usage on each core remaining close to 100\% regardless of the network load.\cite{FREITAS2022148}
+
+DPDK is used in VPP for interfacing with hardware. It is implemented as a plugin called \textit{dpdk-plugin}.\cite{LINGUAGLOSSA, DR:COMMAG-18} 
+
+%--------------------------------------------------------------------
+\subsubsection{Poll Mode Drivers}
+
+
+%--------------------------------------------------------------------
+\subsubsection{Memory management and Hugepages}
+
+
+
+%--------------------------------------------------------------------
+\subsubsection{Packet Reception: DPDK vs. Linux Network Stack}
 
 
