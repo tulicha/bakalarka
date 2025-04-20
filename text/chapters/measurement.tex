@@ -66,6 +66,25 @@ This test focuses on the forwarding performance of the VPP data plane when proce
 These frames offer a balance between protocol overhead and payload efficiency and are representative of many real-world applications that do not utilize maximum frame sizes. 
 The test helps to evaluate how the system handles typical traffic patterns with moderate packet rates and processing demands.
 
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|r|r|r|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Configuration}} &
+\multicolumn{1}{c|}{\textbf{Watts used}} &
+\multicolumn{1}{c|}{\textbf{PPW}} &
+\multicolumn{1}{c|}{\textbf{BPW}} \\
+\hline
+VPP -- 1 worker & 851.21 & 2 581 343.78 & 1 321 648 015.98 \\
+VPP -- 4 workers & 969.49 & 2 266 413.93 & 1 160 403 931.63 \\
+VPP -- 10 workers & 1 175.07 & 1 869 901.91 & 957 389 779.06 \\
+Linux stack &  &  &  \\
+\hline
+\end{tabular}
+\caption{Result of Bidirectional UDP 1 Gbit/s of 512-bytes frames test}
+\label{tab:udp:one}
+\end{table}
+
 %------------------------------------------------------------------------------
 \subsubsection{TODO 888-bytes frames}
 
@@ -114,8 +133,8 @@ file sharing, or other high-bandwidth scenarios in enterprise and data center en
 \multicolumn{1}{c|}{\textbf{PPW}} &
 \multicolumn{1}{c|}{\textbf{BPW}} \\
 \hline
-VPP -- 1 worker &  &  &  \\
-VPP -- 4 workers &  &  &  \\
+VPP -- 1 worker & 866.91 & 1 013 837.98 & 1 297 712 609.61 \\
+VPP -- 4 workers & 961.01 & 914 565.18 & 1 170 643 425.56 \\
 VPP -- 10 workers & 1188.39 & 739 577.31 & 946 658 957.41 \\
 Linux stack & 926.77 & 948 354.26 & 1 213 893 456.20 \\
 \hline

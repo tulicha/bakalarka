@@ -128,24 +128,88 @@ It was initially developed by Intel in 2010 and is now maintained as a Linux Fou
 DPDK provides a set of APIs and components that allow applications to bypass the kernel network stack and directly access network interface cards (NICs) 
 through poll-mode drivers (PMD), significantly reducing the overhead associated with traditional packet handling mechanisms.\cite{dpdk_about}
 
-The DPDK completely bypasses the kernel, communicating directly with the NIC.
-DPDK avoids the use of the kernel’s system calls, instead handling its own I/O synchronization and memory management. 
-DPDK employs a PMD that uses busy-polling to retrieve, process, and deliver network packets to user-space applications without relying on interrupts. 
-While this approach enhances performance by reducing latency, 
-it also results in high CPU utilization, with the CPU usage on each core remaining close to 100\% regardless of the network load.\cite{FREITAS2022148}
-
 DPDK is used in VPP for interfacing with hardware. It is implemented as a plugin called \textit{dpdk-plugin}.\cite{LINGUAGLOSSA, DR:COMMAG-18} 
+
+While VPP supports multiple mechanisms for accessing network devices, such as \textit{af\_packet}, to the best of the author's knowledge, DPDK is by far the most widely used option.
 
 %--------------------------------------------------------------------
 \subsubsection{Poll Mode Drivers}
+Poll Mode Drivers (PMDs) are a key component of the DPDK framework. Unlike traditional network drivers, which rely on interrupts to signal packet arrival, 
+PMDs continuously poll the network interface card (NIC) (specifically its RX queue) in a busy-loop, completely avoiding traditional interrupt-based mechanisms. 
+This approach allows packets to be retrieved, processed, and delivered directly to user space without kernel involvement. 
+While this results in very low latency and high throughput, it also causes constant CPU utilization on the cores assigned to polling, regardless of actual traffic load.\cite{FREITAS2022148}
 
+Not every network interface card is supported by DPDK. Each supported device requires a specific Poll Mode Driver (PMD), which must be available and compatible with the given hardware. 
+An up-to-date list of supported NICs and their corresponding PMDs is maintained on the official DPDK website.\cite{dpdk-supported-nics}
 
 %--------------------------------------------------------------------
 \subsubsection{Memory management and Hugepages}
+DPDK uses a user-space memory model that eliminates the need for kernel involvement during packet processing. 
+It operates on memory regions reserved as hugepages -- large memory pages, typically 2 MB or 1 GB in size, which are allocated at startup. 
+These hugepages are used to store packet buffers and manage memory pools. 
+DPDK defines its own memory management structures, such as mempools, which consist of preallocated fixed-size objects. 
 
-
+DPDK is also explicitly NUMA-aware. Most memory allocation functions require the application to specify the target NUMA node, ensuring that memory is allocated close to the CPU core accessing it. 
+This minimizes latency caused by cross-node memory access and helps optimize performance on multi-socket systems.\cite{burakov2019memory}
 
 %--------------------------------------------------------------------
-\subsubsection{Packet Reception: DPDK vs. Linux Network Stack}
+\subsubsection{Packet Reception and Transmission: A comparison between Linux Network Stack and DPDK}
+When a packet arrives at a NIC managed by the Linux Network Stack, it is first stored in the NIC’s internal buffers. 
+The NIC then writes the packet via Direct Memory Access (DMA) to the section of RAM provided by the driver and updates the corresponding descriptor in the RX buffer. 
+The RX buffer is implemented as a ring queue.
+
+Once the packet has been saved, the corresponding interrupt request (IRQ) is triggered to notify the CPU that one or more packets have arrived in that queue. 
+Then, the corresponding IRQ handler is executed, which acknowledges the interrupt and calls the \textit{napi\_schedule} and \textit{\_\_raise\_softirq\_irqoff} functions.
+
+The first function marks the associated \texttt{napi\_struct}%
+\footnote{\texttt{napi\_struct} represents a NAPI context associated with a specific receive queue of a network device.}
+ as ready for processing, while the second one raises a software interrupt (SoftIQR) specifically intended for processing incoming packets. 
+Once the SoftIRQ is triggered, the kernel handles the actual packet processing in a deferred context. 
+It goes through a list of network devices that have indicated pending work (i.e., their associated \texttt{napi\_struct} has been marked as ready) 
+and calls their associated poll functions to retrieve and process packets from the receive queues.
+
+This happens on the same CPU core that handled the original interrupt. If the system is busy or the processing takes too long, the remaining work may be handled by the \textit{ksoftirqd} kernel thread. 
+The packets may be aggregated into a single larger packet using Generic Receive Offload (GRO), or processed individually. 
+In both cases, they are passed to the IP stack via the \texttt{netif\_receive\_skb} function.
+
+The transmission path is handled in a similar manner, using ring buffers, DMA, and deferred processing. 
+However, unlike reception, packet transmission is initiated from the IP stack using the \texttt{\_\_dev\_queue\_xmit} function. 
+Depending on the qdisc in use, packets are either enqueued in the software queue or passed directly to the driver for transmission.
+Once a packet is selected for transmission, the driver places a descriptor into the TX ring buffer and sets up DMA so that the NIC can read the packet data from memory.
+After the NIC finishes transmitting the packet, it triggers a TX interrupt, which allows the driver to perform post-processing such as unmapping DMA buffers and freeing memory.\cite{linux-packet-input}
 
 
+When there is a NIC with multiple RX queues available, it is assigned to one of the queues based on the NIC's configuration%
+\footnote{For network interface cards with multi-queue capabilities, the corresponding kernel driver often provides a module parameter to define how many hardware queues should be initialized and utilized.}.
+The selection of the target queue is typically based on a hash function computed over network and/or transport layer headers.
+Each queue has a dedicated IRQ, which can be assigned to specific CPU cores based on system settings. This mechanism is known as Receive Side Scaling (RSS).
+
+When sending a packet from a NIC equipped with multiple TX queues, Transmit Packet Steering (XPS) is used to determine the appropriate TX queue.
+The first option is that a CPU core is assigned specific TX queues. The second option is to use the TX queue corresponding to the RX queue from which the flow originated.
+If multiple queues are eligible, a hash function is used to select the specific queue.\cite{linux-rss}
+
+On the other hand, in DPDK the incoming packets are delivered by the network interface card (NIC) using direct memory access (DMA), 
+which writes packet data into pre-allocated memory buffers specified by receive (Rx) descriptors.
+These descriptors are organized in a circular ring (Rx queue), where the NIC populates entries at the head, while the VPP continuously polls the tail using functions such as                    
+\textit{rte\_eth\_rx\_burst()}. This polling mechanism enables the VPP to retrieve multiple packets in a batch,
+minimizing interrupt overhead and reducing latency, thereby increasing throughput and core efficiency.\cite{intel-core-utilization-2025}
+ 
+Transmission is handled similarly, using a ring buffer known as the transmit (Tx) queue.
+The application prepares transmit (Tx) descriptors at the tail of this queue, each containing the address and length of the packet to be sent.
+These descriptors reference memory buffers (mbufs) holding the packet data. 
+After the descriptors are written, the application updates the Tx queue’s tail pointer to notify the NIC that new packets are available.
+The NIC then reads the descriptors from the head of the queue, fetches the packet data via DMA, and transmits the packets on the wire.\cite{intel-pcie-traffic-2025}
+
+%COMPARISON
+Based on the description above, several key differences between the Linux Network Stack and DPDK can be observed.
+Although both rely on a similar underlying mechanism -- ring buffer queues -- their implementations differ fundamentally.
+In the Linux Network Stack, memory management is handled by the kernel through device drivers. 
+In contrast, DPDK allocates memory in user space and manages it through its own framework, providing packet buffers and ring structures directly to the application.
+
+Linux is heavily dependent on hardware interrupts (IRQs) for packet reception and software interrupts (softIRQs) for deferred processing, which introduces frequent context switches. 
+While NAPI uses polling to process packets from receive queues, they are still handled one at a time.
+This increases the likelihood of cache misses during packet processing, as each packet is processed independently and may not benefit from cache locality.
+
+In contrast, DPDK works entirely in user space and uses continuous active polling, completely bypassing the need for interrupts and context switching. 
+Since it does not wait for an interrupt to occur, packet processing can begin sooner, reducing initial latency. 
+Additionally, DPDK can retrieve multiple packets in a single burst, preparing them for vectorized processing in VPP.
