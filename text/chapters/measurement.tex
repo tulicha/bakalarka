@@ -78,7 +78,7 @@ The test helps to evaluate how the system handles typical traffic patterns with 
 VPP -- 1 worker & 851.21 & 2 581 343.78 & 1 321 648 015.98 \\
 VPP -- 4 workers & 969.49 & 2 266 413.93 & 1 160 403 931.63 \\
 VPP -- 10 workers & 1 175.07 & 1 869 901.91 & 957 389 779.06 \\
-Linux stack &  &  &  \\
+Linux stack & 965.58 & 2 275 591.60 & 1 165 102 847.70 \\
 \hline
 \end{tabular}
 \caption{Result of Bidirectional UDP 1 Gbit/s of 512-bytes frames test}
@@ -86,7 +86,7 @@ Linux stack &  &  &  \\
 \end{table}
 
 %------------------------------------------------------------------------------
-\subsubsection{TODO 888-bytes frames}
+\subsubsection{TODO 889-bytes frames}
 
 This test focuses on the forwarding performance of the VPP data plane when processing medium-sized Ethernet frames of 888 bytes. 
 These frames offer a balance between protocol overhead and payload efficiency. As said above this size was found as the average size in real-work network traffic.
@@ -95,18 +95,21 @@ The test helps to evaluate how the system handles traffic patterns with moderate
 
 \begin{table}[h!]
 \centering
-\begin{tabular}{|l|l|l|l|}
+\begin{tabular}{|l|r|r|r|}
 \hline
-\textbf{Configuration} & \textbf{Transmited packets} & \textbf{Transmited bytes} & \textbf{Watts used} \\
+\multicolumn{1}{|c|}{\textbf{Configuration}} &
+\multicolumn{1}{c|}{\textbf{Watts used}} &
+\multicolumn{1}{c|}{\textbf{PPW}} &
+\multicolumn{1}{c|}{\textbf{BPW}} \\
 \hline
-VPP -- 1 worker & 1 293 103 500 & 1 125 000 045 000 & 823.20\\
-VPP -- 4 workers & 1 293 103 500 & 1 125 000 045 000 & 972.49\\
-VPP -- 10 workers & 1 293 103 500 & 1 125 000 045 000 & 1 170.26\\
-Linux stack & 1 293 103 500 & 1 125 000 045 000 & 946.28\\
+VPP -- 1 worker &  &  &  \\
+VPP -- 4 workers & 952.46 & 1 328 629.91 & 1 181 151 986.18 \\
+VPP -- 10 workers & 1 190.42 & 1 063 042.32 & 945 044 623.54 \\
+Linux stack & 940.33 & 1 345 768.87 & 1 196 388 523.99 \\
 \hline
 \end{tabular}
-\caption{Result of Bidirectional UDP 1 Gbit/s of 870-bytes packets test}
-\label{tab:udp:three}
+\caption{Result of Bidirectional UDP 1 Gbit/s of 512-bytes frames test}
+\label{tab:udp:two}
 \end{table}
 
 As shown in table \ref{tab:udp:two}, the second test with 870-byte packets, 

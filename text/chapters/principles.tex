@@ -49,6 +49,7 @@ This approach allows VPP to be deployed on widely available infrastructure witho
 
 \subsection{Techniques used in VPP}
 
+TBD
 DOPAST !!! Low-level code optimization technique
 
 According to Linguaglossa et al.\cite{LINGUAGLOSSA} VPP uses theese kernel-bypass techniques:
@@ -200,6 +201,13 @@ These descriptors reference memory buffers (mbufs) holding the packet data.
 After the descriptors are written, the application updates the Tx queue’s tail pointer to notify the NIC that new packets are available.
 The NIC then reads the descriptors from the head of the queue, fetches the packet data via DMA, and transmits the packets on the wire.\cite{intel-pcie-traffic-2025}
 
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/dpdk-vs-linux.png}
+    \caption{Diagram illustrating the differences in packet handling between the Linux Network Stack and DPDK.}
+    \label{fig:dpdk}
+\end{figure}
+
 %COMPARISON
 Based on the description above, several key differences between the Linux Network Stack and DPDK can be observed.
 Although both rely on a similar underlying mechanism -- ring buffer queues -- their implementations differ fundamentally.
@@ -213,3 +221,4 @@ This increases the likelihood of cache misses during packet processing, as each 
 In contrast, DPDK works entirely in user space and uses continuous active polling, completely bypassing the need for interrupts and context switching. 
 Since it does not wait for an interrupt to occur, packet processing can begin sooner, reducing initial latency. 
 Additionally, DPDK can retrieve multiple packets in a single burst, preparing them for vectorized processing in VPP.
+Figure \ref{fig:dpdk} presents a simplified diagram highlighting the key differences.

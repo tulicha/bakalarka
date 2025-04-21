@@ -1,45 +1,80 @@
-%------------------------------------------
-\subsection{VPP key architecture components}
+VPP’s dataplane is implemented by four main architectural layers: VPPINFRA, VNET, VLIB, and Plugins. 
+Each of these layers provides distinct functionality that supports efficient networking operations, from low-level data structure management to high-level network function optimizations.
 
-VPP's dataplane is implemented by four main architectural layers: VPPINFRA, VNET, VLIB, and Plugins. 
-Each layer provides distinct functionalities that support efficient networking operations, from low-level data structure management to high-level network function optimizations. 
-The following sections describe these layers in detail: \footnote{https://my-vpp-docs.readthedocs.io/en/vpp-config/gettingstarted/developers/swarch/softwarearchitecture.html}
+VPPINFRA provides foundational libraries for tasks such as memory handling, vectors, rings, hash table lookups, and timers. 
+VNET focuses on implementing network protocols for layers 2 to 4 and includes the control plane. 
+VLIB serves as the runtime environment for vectorized processing and also provides the command-line interface and application lifecycle management. 
+Finally, plugins allow the system to be extended or customized by adding new features or modifying existing ones~\cite{fdio-vpp-softwarearchitecture-2506}.
 
-\begin{itemize}
-  \item \textbf{VPPINFRA} -- layer providing foundational libraries for performing tasks with memory, vectors, rings, lookups in hash tables \& timers.
-  \item \textbf{VNET} -- layer that deals with networking on layers 2 - 4 and is responsible for Control plane.
-  \item \textbf{VLIB} -- layer that provides library for vector processing, implements CLI and handles application management functions.
-  \item \textbf{Plugins} -- layer which is a set of plugins that allow for adding network functions and optimizations tailored to specific needs.
-\end{itemize}
-
+%--------------------------------------------------------
 \subsubsection{VPPINFRA}
-VPPINFRA is a collection of library services designed to offer high-performance capabilities for various tasks. 
-It includes features such as dynamic arrays, hashes, bitmaps, high-precision real-time clock support, event logging, and data structure serialization. The following functionalities are implemented:
+VPPINFRA is a collection of foundational libraries designed to provide high-performance capabilities for various internal tasks within VPP. 
+It includes dynamic arrays, hash tables, bitmaps, timing utilities, logging mechanisms, and data structure serialization, all optimized for speed and efficiency.
 
 \begin{itemize}
-  \item \textbf{Vectors} -- dynamically resized arrays with \textit{headers} defined by user. They serve as a core building block for other data structures (e.g., hash tables, pools) and allow efficient memory reuse via safe length resetting.
-  \item \textbf{Bitmaps} -- dynamic bitmaps based on VPPINFRA vectors.
-  \item \textbf{Pools} -- structures used to quickly allocate \& free fixed-size data structures. 
-  \item \textbf{Hashes} -- structures thats provide fast key-value lookups, commonly mapping keys to indices in vectors or pools. Bihash is used in the data plane for fixed-size keys and is thread-safe, while the simpler hash is used in the control plane for exact string matching.
-  \item \textbf{Timekeeping} -- service providing high-precision, low-cost timing based on CPU ticks. Since CPU ticks are not perfectly accurate, the system continuously adjusts its estimate of "ticks per second" by comparing with the kernel’s time. This results in precise and smooth time measurements without the need for expensive system calls. 
-  \item \textbf{Timer wheel} -- system for efficiently managing timers or timeouts. It allows the user to define parameters like the number of wheels, slots per ring, and timers per object, optimizing time-based operations in systems requiring high-performance event management.
+  \item \textbf{Vectors} –- dynamically resized arrays with user-defined headers. Vectors are used as the basis for other structures such as pools or hash tables and support efficient memory reuse through safe length resetting.
+
+  \item \textbf{Bitmaps} -–  compact data structures used to efficiently track the true/false state of multiple indexed items using individual bits, built on top of vectors.
+
+  \item \textbf{Pools} –- structures used to quickly allocate and free fixed-size data structures, such as packet buffers or per-session metadata. Internally, they are implemented using vectors and bitmaps. 
+
+  \item \textbf{Hashes} -- lookup structures optimized for fast access using hash functions. 
+
+  \item \textbf{Timekeeping} -- utilities providing precise, low-overhead timing based on CPU cycles. VPPINFRA continuously adjusts its time calibration by comparing CPU ticks against kernel time, ensuring accurate time measurement without expensive system calls.
+
+  \item \textbf{Timer wheel} -- subsystem for efficiently managing timers and periodic events. It supports multiple configuration options, including the number of wheels, slots, and timers per object, allowing high-performance scheduling in time-sensitive applications.
+
+  \item \textbf{Logging and formatting} -- includes support for fast event logging, trace output, and data formatting used for debugging and diagnostics.
+
+  \item \textbf{Serialization} -- support for serializing and deserializing internal data structures for persistent storage or communication between threads.
 \end{itemize}
 
+The infrastructure layer underpins many of VPP’s internal mechanisms and enables building scalable and fast packet processing pipelines~\cite{fdio-vpp-infrastructure-2506}.
+
+%--------------------------------------------------------
 \subsubsection{VNET}
-odmítám dělat teď
+VNET (VPP Network Stack) implements the core networking logic in VPP, providing graph nodes for Layer 2 and Layer 3 packet processing.
 
+A key mechanism provided by VNET is the concept of feature arcs. 
+These represent named sequences of graph nodes within the packet processing graph, allowing custom nodes -- such as NAT, ACLs, or telemetry -- to be inserted into existing pipelines in a defined order. 
+Feature arcs enable modular composition of processing features without modifying the core graph logic. For example, an ACL node can be inserted at the beginning of the 
+\texttt{ip4-unicast}\footnote{\texttt{ip4-unicast} is a feature arc that processes unicast IPv4 packets before they reach the routing logic.} feature arc.
+
+In addition to protocol and interface handling, VNET also provides a flexible framework for packet tracing, 
+allowing developers to inspect and debug the path each packet takes through the graph in fine detail. 
+This is especially useful for analyzing the behavior of custom nodes or diagnosing complex feature interactions.
+
+Finally, VNET includes a built-in packet generator, which can be used to simulate traffic and evaluate the performance of specific graph paths under 
+controlled conditions.\cite{fdio-vpp-vnet-2506, fdio-vpp-featurearcs-2506}
+
+%--------------------------------------------------------
 \subsubsection{VLIB}
-Zítra je taky den
+VLIB provides the runtime environment and execution engine that powers VPP’s packet processing model.
+One of its core responsibilities is managing the registration and execution of all graph nodes, including input, internal, and process nodes.
 
+The execution of graph nodes in VPP is coordinated by a lightweight cooperative scheduler.
+Each iteration of the main loop begins with input nodes producing vectors of packets, which are then passed through a sequence of internal nodes forming a directed graph.
+Nodes process the incoming vector and determine, for each packet, which next node should process it based on routing, classification, or protocol-specific logic.
+
+Packets destined for the same next node are grouped together and placed into a new \texttt{vlib\_frame\_t}, which is then enqueued to that node for processing.
+This selective forwarding enables efficient vector splitting and maintains high performance by improving cache locality and reducing per-packet overhead.
+
+When a node cannot or should not be executed immediately, 
+VPP defers its execution by adding it to a list of pending operations using \texttt{pending\_frames}.
+These frames are processed later in the main loop
+
+VLIB also provides the command-line interface (CLI), which allows operators to interact with the VPP runtime.\cite{fdio-vpp-vlib-2506}
+
+%--------------------------------------------------------
 \subsubsection{Plugins}
-Plugins are used to modify or create new features into the VPP. 
-Developers can create plugins through a straightforward process, involving the generation of necessary files and integration into the system. 
-After building, the new plugin can be loaded and tested within the VPP environment. 
+Plugins in VPP are implemented as shared object libraries that are automatically discovered and loaded by VLIB during startup. 
+They allow developers to add new features or extend existing functionality without modifying the VPP core.
 
-VLIB supports a simple mechanism for loading and using plugins. 
-VLIB client applications specify a directory where the plug-ins are located and can apply a filter to narrow down the search. 
-Once the plug-ins are loaded, VLIB ensures they are correctly registered and ready for use.
+To create a plugin, developers add a new directory under \texttt{src/plugins}, define build instructions using \texttt{plugin.mk} and \texttt{CMakeLists.txt}, and implement the required logic. 
+After compilation, the plugin is placed into the designated plugin directory and becomes available for VPP to load.
 
+This modular architecture enables rapid experimentation and integration of custom network functions while keeping the base system clean and maintainable.\cite{fdio-vpp-plugins-2506, fdio-vpp-addplugin-2506}
 
 %--------------------------------------
 \subsection{Configuration and Startup}
+TBD
