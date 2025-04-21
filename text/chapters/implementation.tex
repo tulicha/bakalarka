@@ -3,7 +3,7 @@ Each of these layers provides distinct functionality that supports efficient net
 
 VPPINFRA provides foundational libraries for tasks such as memory handling, vectors, rings, hash table lookups, and timers. 
 VNET focuses on implementing network protocols for layers 2 to 4 and includes the control plane. 
-VLIB serves as the runtime environment for vectorized processing and also provides the command-line interface and application lifecycle management. 
+VLIB serves as the runtime environment for vectorized processing and also provides the command-line interface. 
 Finally, plugins allow the system to be extended or customized by adding new features or modifying existing ones~\cite{fdio-vpp-softwarearchitecture-2506}.
 
 %--------------------------------------------------------
@@ -41,7 +41,7 @@ Feature arcs enable modular composition of processing features without modifying
 \texttt{ip4-unicast}\footnote{\texttt{ip4-unicast} is a feature arc that processes unicast IPv4 packets before they reach the routing logic.} feature arc.
 
 In addition to protocol and interface handling, VNET also provides a flexible framework for packet tracing, 
-allowing developers to inspect and debug the path each packet takes through the graph in fine detail. 
+allowing developers to inspect and debug the path that each packet takes through the graph in fine detail. 
 This is especially useful for analyzing the behavior of custom nodes or diagnosing complex feature interactions.
 
 Finally, VNET includes a built-in packet generator, which can be used to simulate traffic and evaluate the performance of specific graph paths under 
@@ -50,7 +50,7 @@ controlled conditions.\cite{fdio-vpp-vnet-2506, fdio-vpp-featurearcs-2506}
 %--------------------------------------------------------
 \subsubsection{VLIB}
 VLIB provides the runtime environment and execution engine that powers VPP’s packet processing model.
-One of its core responsibilities is managing the registration and execution of all graph nodes, including input, internal, and process nodes.
+One of its core responsibilities is managing the registration and execution of all graph nodes, including input, internal and process nodes.
 
 The execution of graph nodes in VPP is coordinated by a lightweight cooperative scheduler.
 Each iteration of the main loop begins with input nodes producing vectors of packets, which are then passed through a sequence of internal nodes forming a directed graph.

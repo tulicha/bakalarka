@@ -26,9 +26,9 @@ would not request interrupts continuously, which is not the case with network de
 to process large volumes of data split into small parts. 
 This method requires the microprocessor to execute a significant
 number of instructions not directly related to packet processing. 
-Chase et al. \cite{gallatin1999trapeze} discovered \footnote{kap. 3.3 obr. 6} that if MTU is 1500 bytes, then interrupt handling accounts for 20\% - 25\% of receiver packet-processing overhead.
+Gallatin et al. \cite{gallatin1999trapeze} discovered \footnote{kap. 3.3 obr. 6} that if MTU is 1500 bytes, then interrupt handling accounts for 20\% - 25\% of receiver packet-processing overhead.
 Another disadvantage of tradidtional packet processing is the inefficient handling of cache memory; the processing of the packets one by one in response to
-interrupts leads to frequent cache misses in both cache \& inctruction caches.\footnote{kap. 4.2}\cite{cox2000profiling} 
+interrupts leads to frequent cache misses in both cache and inctruction caches.\footnote{kap. 4.2}\cite{cox2000profiling} 
 
 %-----------------------------------------------------
 \subsection{An Introduction to VPP}
@@ -101,18 +101,18 @@ Vectorized packet processing and specific coding practices can take full advanta
 \end{itemize}
 
 \subsection{VPP Processing Graph and Graph nodes}
-At the core of VPP (Vector Packet Processing) lies the Packet Processing Graph, a directed graph composed of relatively small, modular \& loosely coupled nodes. 
-Each node is designed to perform a specific task and there are 3 types of them: \textit{process}, \textit{input} \& \textit{internal}. 
+At the core of VPP lies the Packet Processing Graph, a directed graph composed of relatively small, modular and loosely coupled nodes. 
+Each node is designed to perform a specific task and there are 3 types of them: \textit{process}, \textit{input} and \textit{internal}. 
 Process nodes do not participate in the packet forwarding graph; instead, they handle timers, events, and other background tasks within the VPP runtime.
 Input nodes are used for input of data and internal nodes are used for vector processing. Internal nodes also serves as output nodes. 
 When a vector of packets is prepared by input node, it is then pushed through the internal nodes. 
-During processing, the vector may be split if the batch contains packets of different protocols or types, as they may need to follow different paths through the graph
+During processing, the vector may be split if the batch contains packets of different protocols or types, as they may need to follow different paths through the graph.
 When the original vector is completely processed, the process repeats.
 Illustration of this Processing Graph is shown in fig. \ref{fig:processing-graph}.
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.7\linewidth]{images/processing-graph.jpg}
+    \includegraphics[width=0.85\linewidth]{images/processing-graph.jpg}
     \caption{Picture showing the VPP Processing Graph~\cite{LINGUAGLOSSA}}
     \label{fig:processing-graph}
 \end{figure}
@@ -126,7 +126,7 @@ Moreover, existing nodes can be rewired to modify the packet processing logic wh
 \subsection{DPDK and Its Role in VPP}
 The Data Plane Development Kit (DPDK) is an open-source collection of libraries and drivers designed to support high-speed packet processing in user space. 
 It was initially developed by Intel in 2010 and is now maintained as a Linux Foundation project. 
-DPDK provides a set of APIs and components that allow applications to bypass the kernel network stack and directly access network interface cards (NICs) 
+DPDK provides a set of APIs and components that allow applications to bypass the kernel network stack and to directly access network interface cards (NICs) 
 through poll-mode drivers (PMD), significantly reducing the overhead associated with traditional packet handling mechanisms.\cite{dpdk_about}
 
 DPDK is used in VPP for interfacing with hardware. It is implemented as a plugin called \textit{dpdk-plugin}.\cite{LINGUAGLOSSA, DR:COMMAG-18} 
@@ -138,7 +138,7 @@ While VPP supports multiple mechanisms for accessing network devices, such as \t
 Poll Mode Drivers (PMDs) are a key component of the DPDK framework. Unlike traditional network drivers, which rely on interrupts to signal packet arrival, 
 PMDs continuously poll the network interface card (NIC) (specifically its RX queue) in a busy-loop, completely avoiding traditional interrupt-based mechanisms. 
 This approach allows packets to be retrieved, processed, and delivered directly to user space without kernel involvement. 
-While this results in very low latency and high throughput, it also causes constant CPU utilization on the cores assigned to polling, regardless of actual traffic load.\cite{FREITAS2022148}
+While this results in very low latency and high throughput, it also causes constant CPU utilization on the cores assigned to polling, regardless of the traffic load.\cite{FREITAS2022148}
 
 Not every network interface card is supported by DPDK. Each supported device requires a specific Poll Mode Driver (PMD), which must be available and compatible with the given hardware. 
 An up-to-date list of supported NICs and their corresponding PMDs is maintained on the official DPDK website.\cite{dpdk-supported-nics}
@@ -215,7 +215,7 @@ In the Linux Network Stack, memory management is handled by the kernel through d
 In contrast, DPDK allocates memory in user space and manages it through its own framework, providing packet buffers and ring structures directly to the application.
 
 Linux is heavily dependent on hardware interrupts (IRQs) for packet reception and software interrupts (softIRQs) for deferred processing, which introduces frequent context switches. 
-While NAPI uses polling to process packets from receive queues, they are still handled one at a time.
+While NAPI uses polling to process packets from receive queues, the packets are still handled by kernel strictly one by one.
 This increases the likelihood of cache misses during packet processing, as each packet is processed independently and may not benefit from cache locality.
 
 In contrast, DPDK works entirely in user space and uses continuous active polling, completely bypassing the need for interrupts and context switching. 
