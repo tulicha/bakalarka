@@ -8,6 +8,7 @@ Following that, the architecture of VPP is explored in detail, explaining how pa
 and the various techniques that contribute to its high efficiency—such as I/O and compute batching, zero-copy methods, and lock-free multi-threading. 
 The purpose of this section is to provide a theoretical foundation for understanding how VPP operates.
 
+%-----------------------------------------------------
 \subsection{Traditional network traffic processing}
 A \textit{network packet} is a basic unit of data transmitted over a network. It consists of a \textit{header}, which includes control information such as source and destination IP addresses, 
 and a \textit{payload}, which carries the actual user data. 
@@ -47,15 +48,13 @@ It supports various architectures such as x86, ARM, and Power, and can be deploy
 The design of VPP is agnostic to hardware, kernel, and deployment platform, meaning it can operate across a wide range of systems, including bare metal servers, virtual machines (VMs), and containers. 
 This approach allows VPP to be deployed on widely available infrastructure without the need for specialized hardware.\cite{fdio_what_is_vpp}
 
+%-----------------------------------------------------
 \subsection{Techniques used in VPP}
-
-TBD
-DOPAST !!! Low-level code optimization technique
-
-According to Linguaglossa et al.\cite{LINGUAGLOSSA} VPP uses theese kernel-bypass techniques:
+According to Linguaglossa et al.~\cite{LINGUAGLOSSA}, 
+VPP utilizes a combination of kernel-bypass and low-level code optimization techniques to maximize packet processing efficiency and take full advantage of modern CPU microarchitectures.
 
 \begin{itemize}
-  \item \textbf{Lock-Free Multi-Threading (LFMT)}
+  \item \textbf{Lock-Free Multi-Threading}
 is a programming technique that leverages modern multi-core CPUs to increase system performance. In network applications, parallelism is achieved by running multiple threads in the same time. 
 Ideally, the more threads are used, the better the system performance but only up to a saturation point beyond which additional threads bring no gainns. 
 However, to reach this ideal performance, traditional synchronization mechanisms such as mutexes and semaphores must be avoided, as they introduce delays due to thread contention. 
@@ -63,43 +62,66 @@ Instead, lock-free architectures have to be used, allowing threads to operate in
 In the context of VPP this approach is enabled by hardware features like multi-queue NICs, 
 which allow each thread to handle a distinct subset of traffic, ensuring efficient and parallel processing.
 
-  \item \textbf{I/O batching (IOB)}
+  \item \textbf{I/O batching}
 is a key technique used in VPP. 
 Instead of raising an interrupt for every incoming packet, the network interface card (NIC) collects multiple packets into a buffer and triggers an interrupt only when the buffer is full. 
 This reduces the overhead caused by frequent context switching and interrupt handling. 
 VPP typically uses poll-mode drivers, which collect packets in batches without relying on interrupts. 
 Moreover, the batching technique is applied system-wide in VPP. This approach maximizes CPU efficiency, improves cache usage, and delivers stable, high-throughput performance even under heavy load.
 
-  \item \textbf{Compute batching (CB)} 
+  \item \textbf{Compute batching} 
 is a technique that extends I/O batching to the processing phase itself. 
 Instead of processing one packet at a time, network functions are designed to operate on entire batches of packets. 
 This approach minimizes overhead from function calls (such as context switches and stack setup) and improves instruction cache efficiency. 
 When a batch of packets enters a processing function, only the first packet might cause an instruction cache miss, while the rest benefit from already-warmed cache.
 Additionally it is possible to take advatage of instruction-level parallelism.
   
-  \item \textbf{Receive-Side Scaling (RSS)}
+  \item \textbf{Receive-Side Scaling}
 is a hardware-based technique used by modern NICs to distribute incoming packets across multiple RX queues. 
 This enables parallel packet processing by allowing each queue to be handled by a separate thread, improving scalability and throughput. 
 Packet assignment is typically done using a hash function over packet header fields (e.g., the 5-tuple). 
 
-  \item \textbf{Zero-Copy (Z-C)} 
+  \item \textbf{Zero-Copy} 
 is a technique used to eliminate unnecessary memory copying during packet processing. 
 Instead of copying incoming packets from the network interface card (NIC) to a separate buffer via system calls, 
 the NIC writes packets directly into a pre-allocated memory region that is shared with the user-space application via Direct Memory Access (DMA). 
 This allows the application to access packet data without invoking system calls or duplicating memory, significantly reducing CPU overhead. 
 
-  \item \textbf {Cache Coherence and Locality (CC\&L)} are critical factors in the performance of modern software-based packet processing systems. 
+  \item \textbf{Cache Coherence and Locality} are critical factors in the performance of modern software-based packet processing systems. 
 In current COTS architectures, memory access has become a major bottleneck, which is mitigated by a multi-level cache hierarchy.
 Minimizing cache misses and maintaining data locality during packet processing is essential for achieving high performance and low latency.
+  
+  \item \textbf{Multi-loop} is a coding technique in which functions are designed to process \textit{N} packets simultaneously, assuming they undergo the same operations. 
+Because the processing of each packet is usually independent of the others, this approach enables high instruction-level parallelism and keeps CPU pipelines efficiently utilized. 
+It requires writing explicitly parallel functions, often using C templates, and helps increase throughput by raising the number of instructions executed per clock cycle. 
+However, its effectiveness is limited when performance is primarily constrained by memory access rather than computation.
 
-  \item \textbf {Low-Level Parallelism (LLP)} 
-refers to the ability to exploit the internal micro-architecture of modern CPUs, including multi-stage pipelines, arithmetic-logical units (ALUs), and branch predictors that help maintain pipeline efficiency. 
-Well-optimized code can keep these pipelines full and execute multiple instructions per clock cycle, increasing overall throughput. 
-Performance can be further improved by giving hints to the compiler -- such as indicating the likely outcome of conditional branches -- to reduce pipeline stalls. 
-Vectorized packet processing and specific coding practices can take full advantage of these hardware features and VPP was specifically designed to taky advantage of LLP.
+  \item \textbf{Data prefetching} is a technique used to preload data into the CPU cache before it is actually needed during processing. 
+In the context of VPP, this means prefetching data for the \textit{i+1}-th packet while the \textit{i}-th packet is being processed.
+When combined with multi-loop processing, it is possible to prefetch data for packets \textit{i+1} to \textit{i+N} while processing packets \textit{i−N} to \textit{i}, further improving efficiency.
+Although prefetching cannot be applied at the start or end of the batch (due to a lack of preceding or following packets), 
+this limitation has negligible impact on performance because of the large batch size (usually 256 packets) typically used in VPP.
+The technique increases instructions per clock cycle by reducing memory access latency.
+
+ \item \textbf{Branch prediction} in VPP refers to a coding practice where developers provide compiler hints to indicate which branch of a conditional statement is more likely to be taken.
+These hints allow the compiler to generate optimized machine code that minimizes the performance cost of mispredicted branches.
+When the prediction is correct, the CPU pipeline continues execution without interruption, reducing wasted cycles and improving throughput.
+Although modern CPUs have effective built-in branch predictors, providing explicit hints can still offer performance benefits in branch-heavy code.
+Because the processing logic in VPP is relatively stable, such predictions are often accurate and help to improve performance.
+ 
+  \item \textbf{Function flattening} refers to the use of inline functions within VPP graph nodes to eliminate the overhead associated with standard function calls.
+By avoiding register shuffling and stack operations required by the Application Binary Interface, this approach reduces latency and improves execution speed.
+Additionally, inlining enables the compiler to perform more aggressive optimizations, such as removing unused code branches
+
+  \item \textbf{Direct Cache Access} is a hardware-supported technique that allows network interface cards to write incoming packet data directly into the CPU’s L3 cache, bypassing RAM. 
+As an extension of zero-copy via DMA, this reduces memory latency and can significantly lower RAM usage.
+
+  \item \textbf{Multi-architecture support} allows VPP to select the most suitable implementation of a graph node function at runtime, based on the detected CPU microarchitecture.
+For example, a single binary can dynamically use AVX2-optimized code on supported processors, while falling back to compatible versions on older hardware.
 
 \end{itemize}
 
+%-----------------------------------------------------
 \subsection{VPP Processing Graph and Graph nodes}
 At the core of VPP lies the Packet Processing Graph, a directed graph composed of relatively small, modular and loosely coupled nodes. 
 Each node is designed to perform a specific task and there are 3 types of them: \textit{process}, \textit{input} and \textit{internal}. 
