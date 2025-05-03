@@ -7,7 +7,7 @@ VLIB serves as the runtime environment for vectorized processing and also provid
 Finally, plugins allow the system to be extended or customized by adding new features or modifying existing ones~\cite{fdio-vpp-softwarearchitecture-2506}.
 
 %--------------------------------------------------------
-\subsubsection{VPPINFRA}
+\subsection{VPPINFRA}
 VPPINFRA is a collection of foundational libraries designed to provide high-performance capabilities for various internal tasks within VPP. 
 It includes dynamic arrays, hash tables, bitmaps, timing utilities, logging mechanisms, and data structure serialization, all optimized for speed and efficiency.
 
@@ -32,7 +32,7 @@ It includes dynamic arrays, hash tables, bitmaps, timing utilities, logging mech
 The infrastructure layer underpins many of VPP’s internal mechanisms and enables building scalable and fast packet processing pipelines~\cite{fdio-vpp-infrastructure-2506}.
 
 %--------------------------------------------------------
-\subsubsection{VNET}
+\subsection{VNET}
 VNET (VPP Network Stack) implements the core networking logic in VPP, providing graph nodes for Layer 2 and Layer 3 packet processing.
 
 A key mechanism provided by VNET is the concept of feature arcs. 
@@ -48,7 +48,7 @@ Finally, VNET includes a built-in packet generator, which can be used to simulat
 controlled conditions.\cite{fdio-vpp-vnet-2506, fdio-vpp-featurearcs-2506}
 
 %--------------------------------------------------------
-\subsubsection{VLIB}
+\subsection{VLIB}
 VLIB provides the runtime environment and execution engine that powers VPP’s packet processing model.
 One of its core responsibilities is managing the registration and execution of all graph nodes, including input, internal and process nodes.
 
@@ -66,15 +66,68 @@ These frames are processed later in the main loop
 VLIB also provides the command-line interface (CLI), which allows operators to interact with the VPP runtime.\cite{fdio-vpp-vlib-2506}
 
 %--------------------------------------------------------
-\subsubsection{Plugins}
+\subsection{Plugins}
 Plugins in VPP are implemented as shared object libraries that are automatically discovered and loaded by VLIB during startup. 
 They allow developers to add new features or extend existing functionality without modifying the VPP core.
 
 To create a plugin, developers add a new directory under \texttt{src/plugins}, define build instructions using \texttt{plugin.mk} and \texttt{CMakeLists.txt}, and implement the required logic. 
 After compilation, the plugin is placed into the designated plugin directory and becomes available for VPP to load.
 
-This modular architecture enables rapid experimentation and integration of custom network functions while keeping the base system clean and maintainable.\cite{fdio-vpp-plugins-2506, fdio-vpp-addplugin-2506}
+This modular architecture enables rapid experimentation and integration of custom network functions while keeping the base system clean and maintainable.~\cite{fdio-vpp-plugins-2506, fdio-vpp-addplugin-2506}
 
 %--------------------------------------
-\subsection{Configuration and Startup}
-TBD
+\subsection{Installation, Configuration and Startup}
+VPP officially supports the \textit{x86\_64} and \textit{ARM-AArch64} architectures and can be installed on recent LTS versions of Debian and Ubuntu Linux distributions.~\cite{fdio-supported-2025}
+Prebuilt packages for these systems are provided via the official FD.io package repository hosted on Packagecloud.io~\cite{fdio-packagecloud}.
+Alternatively, VPP can be built from source code to enable custom builds, which can be useful for development purposes.
+This approach also enables installation on distributions such as Red Hat and CentOS, which are not officially supported by the prebuilt packages.~\cite{fdio-building-guide}.
+
+\subsubsection{System Preparation}
+After installation, VPP registers itself as a system service, and a corresponding systemd unit file is created at \texttt{/usr/lib/systemd/system/vpp.service}. 
+This enables standard service management commands such as \texttt{systemctl start vpp} or \texttt{systemctl status vpp} to control the daemon. 
+The service uses the default configuration defined in \texttt{/etc/vpp/startup.conf}, unless otherwise specified.
+
+Since VPP requires hugepages, the installation process places a configuration file at \texttt{/etc/sysctl.d/80-vpp.conf} to override system defaults. 
+By default, this sets the number of 2~MB hugepages to~1024.\footnote{This is a system-wide setting, not specific to VPP.}~\cite{fdio-running}
+
+Before running VPP with DPDK, the relevant network interfaces must either be detached from their kernel drivers and bound to a kernel module providing user-space access, such as \texttt{vfio-pci},
+or used with a bifurcated driver\footnote{In this case, the NIC remains under kernel control, while the data path is handled by the PMD.}.
+In the former case, the \texttt{dpdk-devbind.py} utility can be used to rebind interfaces as needed.
+This setup is required for DPDK to successfully initialize the specified network interface.~\cite{dpdk-linux-drivers}
+
+\subsubsection{Startup Configuration}
+Although VPP can be started with command-line arguments, such as \verb|/usr/bin/vpp unix { interactive cli-listen 127.0.0.1:5002 }|, which can be useful for debugging purposes, 
+it is typically started using a configuration file. 
+The default configuration file is located at \texttt{/etc/vpp/startup.conf}, but a custom file can also be specified.
+When not using \texttt{systemd}, a specific configuration file can be passed manually via the \texttt{-c} parameter, 
+for example: \verb|/usr/bin/vpp -c /etc/vpp/startup.conf|.~\cite{fdio-config-getting-started} 
+
+The configuration file is divided into several sections. The following overview summarizes the most relevant ones, as described in the official configuration reference.~\cite{fdio-config-reference}
+\begin{itemize}
+  \item \textbf{The unix section} defines the general runtime behavior of the VPP process. 
+It includes parameters that control how the application runs, where it logs output, and how the command-line interface is exposed. 
+The \texttt{nodaemon} parameter prevents VPP from running in the background. 
+The \texttt{log} parameter specifies the path to the log file, typically set to \texttt{/var/log/vpp/vpp.log}. 
+The \texttt{cli-listen} parameter defines how the VPP CLI is made accessible—by default through a UNIX domain socket at \texttt{/run/vpp/cli.sock}. 
+Additionally, the \texttt{startup-config} parameter (or its alias \texttt{exec}) can be used to provide a file containing CLI commands that are executed automatically after VPP starts.
+
+  \item \textbf{The api-trace section} controls how API message tracing is handled within VPP.  
+This section is primarily used for debugging and development purposes. 
+API message tracing is typically enabled using the \texttt{api-trace on} command.
+
+
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
