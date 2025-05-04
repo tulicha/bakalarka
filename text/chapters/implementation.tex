@@ -9,27 +9,30 @@ Finally, plugins allow the system to be extended or customized by adding new fea
 %--------------------------------------------------------
 \subsection{VPPINFRA}
 VPPINFRA is a collection of foundational libraries designed to provide high-performance capabilities for various internal tasks within VPP. 
-It includes dynamic arrays, hash tables, bitmaps, timing utilities, logging mechanisms, and data structure serialization, all optimized for speed and efficiency.
+It includes dynamic arrays, hash tables, bitmaps, timing utilities, logging mechanisms, and data structure serialization, all optimized for speed and efficiency.~\cite{fdio-vpp-infrastructure-2506}
 
 \begin{itemize}
-  \item \textbf{Vectors} –- dynamically resized arrays with user-defined headers. Vectors are used as the basis for other structures such as pools or hash tables and support efficient memory reuse through safe length resetting.
+  \item \textbf{Vectors} –- dynamically resized arrays with user-defined headers. 
+Vectors are used as the basis for other structures such as pools or hash tables and support efficient memory reuse through safe length resetting.~\cite{fdio-vpp-infrastructure-2506}
 
-  \item \textbf{Bitmaps} -–  compact data structures used to efficiently track the true/false state of multiple indexed items using individual bits, built on top of vectors.
+  \item \textbf{Bitmaps} -–  compact data structures used to efficiently track the true/false state of multiple indexed items using individual bits, built on top of vectors.~\cite{fdio-vpp-infrastructure-2506}
 
-  \item \textbf{Pools} –- structures used to quickly allocate and free fixed-size data structures, such as packet buffers or per-session metadata. Internally, they are implemented using vectors and bitmaps. 
+  \item \textbf{Pools} –- structures used to quickly allocate and free fixed-size data structures, such as packet buffers or per-session metadata. 
+Internally, they are implemented using vectors and bitmaps.~\cite{fdio-vpp-infrastructure-2506}
 
-  \item \textbf{Hashes} -- lookup structures optimized for fast access using hash functions. 
+  \item \textbf{Hashes} -- lookup structures optimized for fast access using hash functions.~\cite{fdio-vpp-infrastructure-2506}
 
-  \item \textbf{Timekeeping} -- utilities providing precise, low-overhead timing based on CPU cycles. VPPINFRA continuously adjusts its time calibration by comparing CPU ticks against kernel time, ensuring accurate time measurement without expensive system calls.
+  \item \textbf{Timekeeping} -- utilities providing precise, low-overhead timing based on CPU cycles. 
+VPPINFRA continuously adjusts its time calibration by comparing CPU ticks against kernel time, ensuring accurate time measurement without expensive system calls.~\cite{fdio-vpp-infrastructure-2506}
 
-  \item \textbf{Timer wheel} -- subsystem for efficiently managing timers and periodic events. It supports multiple configuration options, including the number of wheels, slots, and timers per object, allowing high-performance scheduling in time-sensitive applications.
+  \item \textbf{Timer wheel} -- subsystem for efficiently managing timers and periodic events. 
+It supports multiple configuration options, including the number of wheels, slots, and timers per object, 
+allowing high-performance scheduling in time-sensitive applications.~\cite{fdio-vpp-infrastructure-2506}
 
-  \item \textbf{Logging and formatting} -- includes support for fast event logging, trace output, and data formatting used for debugging and diagnostics.
+  \item \textbf{Logging and formatting} -- includes support for fast event logging, trace output, and data formatting used for debugging and diagnostics.~\cite{fdio-vpp-infrastructure-2506}
 
-  \item \textbf{Serialization} -- support for serializing and deserializing internal data structures for persistent storage or communication between threads.
+  \item \textbf{Serialization} -- support for serializing and deserializing internal data structures for persistent storage or communication between threads.~\cite{fdio-vpp-infrastructure-2506}
 \end{itemize}
-
-The infrastructure layer underpins many of VPP’s internal mechanisms and enables building scalable and fast packet processing pipelines~\cite{fdio-vpp-infrastructure-2506}.
 
 %--------------------------------------------------------
 \subsection{VNET}
@@ -45,7 +48,7 @@ allowing developers to inspect and debug the path that each packet takes through
 This is especially useful for analyzing the behavior of custom nodes or diagnosing complex feature interactions.
 
 Finally, VNET includes a built-in packet generator, which can be used to simulate traffic and evaluate the performance of specific graph paths under 
-controlled conditions.\cite{fdio-vpp-vnet-2506, fdio-vpp-featurearcs-2506}
+controlled conditions.~\cite{fdio-vpp-vnet-2506, fdio-vpp-featurearcs-2506}
 
 %--------------------------------------------------------
 \subsection{VLIB}
@@ -61,9 +64,9 @@ This selective forwarding enables efficient vector splitting and maintains high 
 
 When a node cannot or should not be executed immediately, 
 VPP defers its execution by adding it to a list of pending operations using \texttt{pending\_frames}.
-These frames are processed later in the main loop
+These frames are processed later in the main loop.
 
-VLIB also provides the command-line interface (CLI), which allows operators to interact with the VPP runtime.\cite{fdio-vpp-vlib-2506}
+VLIB also provides the command-line interface (CLI), which allows operators to interact with the VPP runtime.~\cite{fdio-vpp-vlib-2506}
 
 %--------------------------------------------------------
 \subsection{Plugins}
@@ -103,22 +106,39 @@ When not using \texttt{systemd}, a specific configuration file can be passed man
 for example: \verb|/usr/bin/vpp -c /etc/vpp/startup.conf|.~\cite{fdio-config-getting-started} 
 
 The configuration file is divided into several sections. The following overview summarizes the most relevant ones, as described in the official configuration reference.~\cite{fdio-config-reference}
+
 \begin{itemize}
   \item \textbf{The unix section} defines the general runtime behavior of the VPP process. 
 It includes parameters that control how the application runs, where it logs output, and how the command-line interface is exposed. 
 The \texttt{nodaemon} parameter prevents VPP from running in the background. 
 The \texttt{log} parameter specifies the path to the log file, typically set to \texttt{/var/log/vpp/vpp.log}. 
-The \texttt{cli-listen} parameter defines how the VPP CLI is made accessible—by default through a UNIX domain socket at \texttt{/run/vpp/cli.sock}. 
+The \texttt{cli-listen} parameter defines how the VPP CLI is made accessible -- by default through a UNIX domain socket at \texttt{/run/vpp/cli.sock}. 
 Additionally, the \texttt{startup-config} parameter (or its alias \texttt{exec}) can be used to provide a file containing CLI commands that are executed automatically after VPP starts.
 
   \item \textbf{The api-trace section} controls how API message tracing is handled within VPP.  
 This section is primarily used for debugging and development purposes. 
 API message tracing is typically enabled using the \texttt{api-trace on} command.
 
+  \item \textbf{The cpu section} is used to configure how VPP threads are mapped to CPU cores.  
+The \texttt{main-core} parameter specifies the core on which the main thread runs.  
+The \texttt{corelist-workers} parameter defines a list of cores used by worker threads responsible for packet processing.  
+The \texttt{scheduler-policy} parameter allows selecting a thread scheduling strategy, such as \texttt{fifo}, \texttt{rr}, or others, depending on the desired behavior.
+
+  \item \textbf{The buffers section} allows configuring the size and number of memory buffers used by VPP for packet processing.  
+
+  \item \textbf{The dpdk section} configures how DPDK is initialized and used by VPP.
+The \texttt{dev} parameter specifies the PCI address of a network interface to be managed by VPP/DPDK.  
+The \texttt{uio-driver} parameter sets the kernel module providing user-space access to be used, commonly \texttt{vfio-pci}.  
+The \texttt{num-mbufs} parameter defines the number of memory buffers allocated for packet processing.  
+Additional options include parameters such as \texttt{num-rx-queues} and \texttt{num-tx-queues}, which specify the number of receive and transmit queues for each device.
+
+  \item \textbf{The plugins section} allows enabling or disabling individual VPP plugins during startup.  
+Each plugin can be explicitly marked as \texttt{enable} or \texttt{disable}, depending on whether it should be loaded. It is also possible to disable all plugins by default.  
 
 \end{itemize}
 
-
+Other configuration sections exist for advanced or highly specific use cases, such as memory tuning, internal event logging, or telemetry export\dots; 
+and are, to the author's best knowledge, used only in fine-tuned or specialized deployments.
 
 
 

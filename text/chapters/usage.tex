@@ -4,14 +4,12 @@ At Layer 2, it provides Ethernet bridging, MAC learning, VLAN tagging (including
 At Layer 3, VPP implements both IPv4 and IPv6 routing with ECMP support, NAT44/NAT64, and ACL-based filtering. 
 It also supports tunneling mechanisms such as GTP-U, IP-in-IP, and VXLAN. Segment routing (SRv6), LISP, and punt redirect mechanisms are included as well.
 
-At the transport layer (L4), basic UDP and TCP stack functionality is available, 
-enabling packet forwarding and processing for a wide range of use cases within virtualized networking environments.
+At the transport layer (L4), basic UDP and TCP stack functionality is available. 
 
 Additionally, supported features include PPPoE, the WireGuard VPN protocol, GRE tunneling, DHCP client and proxy functionality, and L2TPv3.\cite{fdio-vpp-features-2502}
 
-According to the authors, VPP can be for example effectively utilized as a virtual switch, virtual router, gateway or used as a basis for a firewall, IDS and load balancer.\cite{fdio_what_is_vpp}
+According to the VPP's authors~\cite{fdio_what_is_vpp}, VPP can be for example effectively utilized as a virtual switch, virtual router, gateway or used as a basis for a firewall, IDS and load balancer.
 It already includes enough features to be deployed in production environments.
-
 
 
 \subsection{Integration with the SDN/NFV Ecosystem}
@@ -25,16 +23,16 @@ Its modular architecture allows deployment in environments utilizing service fun
 Because of its userspace design and performance-optimized data plane, VPP can serve as the fast packet processing backend for SDN-controlled systems and NFV orchestrators.\cite{fdio2017whitepaper}
 
 \subsection{VPP as a Complete Router Solution}
-Vector Packet Processing (VPP) is implemented solely as a data-plane, meaning it is not a complete routing solution on its own. 
+VPP is implemented solely as a data-plane, meaning it is not a complete routing solution on its own. 
 VPP is dedicated to efficiently forwarding packets between interfaces based on routing rules and access control filters, 
 but it does not include a native control-plane or support for dynamic routing protocols such as BGP or OSPF.
 
 However, as demonstrated by the authors of the VBSR (VPP-Bird Software Router) project \cite{10819057}, 
 it is possible to integrate VPP with additional components such as the Linux Control Plane (Linux-CP) plugin and the BIRD routing daemon. 
 Bird acting as a control-plane enables dynamic routing using protocols like BGP 
-and the Linux-CP is responsible for communication between VPP and BIRD 
+and the Linux-CP is responsible for communication between VPP and BIRD. 
 This integrated system creates a nearly feature-complete router solution, comparable in functionality to commercial routers.
 
-It is important to note, however, that firewall functionality is still limited and was left by authors of VBSR as a future work.\cite{10819057} 
-While VPP supports basic packet filtering through ACLs, it lacks advanced stateful firewall features\cite{fdio-vpp-features-2502}. These would need to be handled externally.
+It is important to note, however, that firewall functionality is still limited and was left by authors of VBSR as a future work.~\cite{10819057} 
+While VPP supports basic packet filtering through ACLs, it lacks advanced stateful firewall features~\cite{fdio-vpp-features-2502}. These would need to be handled externally.
 
