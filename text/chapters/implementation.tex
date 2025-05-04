@@ -86,12 +86,12 @@ Alternatively, VPP can be built from source code to enable custom builds, which 
 This approach also enables installation on distributions such as Red Hat and CentOS, which are not officially supported by the prebuilt packages.~\cite{fdio-building-guide}.
 
 \subsubsection{System Preparation}
-After installation, VPP registers itself as a system service, and a corresponding systemd unit file is created at \texttt{/usr/lib/systemd/system/vpp.service}. 
+After installation, VPP registers itself as a system service and a corresponding systemd unit file is created at \texttt{/usr/lib/systemd/system/vpp.service}. 
 This enables standard service management commands such as \texttt{systemctl start vpp} or \texttt{systemctl status vpp} to control the daemon. 
 The service uses the default configuration defined in \texttt{/etc/vpp/startup.conf}, unless otherwise specified.
 
 Since VPP requires hugepages, the installation process places a configuration file at \texttt{/etc/sysctl.d/80-vpp.conf} to override system defaults. 
-By default, this sets the number of 2~MB hugepages to~1024.\footnote{This is a system-wide setting, not specific to VPP.}~\cite{fdio-running}
+By default, this configuration sets the number of 2~MB hugepages to~1024.\footnote{This is a system-wide setting, not specific to VPP.}~\cite{fdio-running}
 
 Before running VPP with DPDK, the relevant network interfaces must either be detached from their kernel drivers and bound to a kernel module providing user-space access, such as \texttt{vfio-pci},
 or used with a bifurcated driver\footnote{In this case, the NIC remains under kernel control, while the data path is handled by the PMD.}.
@@ -112,7 +112,7 @@ The configuration file is divided into several sections. The following overview 
 It includes parameters that control how the application runs, where it logs output, and how the command-line interface is exposed. 
 The \texttt{nodaemon} parameter prevents VPP from running in the background. 
 The \texttt{log} parameter specifies the path to the log file, typically set to \texttt{/var/log/vpp/vpp.log}. 
-The \texttt{cli-listen} parameter defines how the VPP CLI is made accessible -- by default through a UNIX domain socket at \texttt{/run/vpp/cli.sock}. 
+The \texttt{cli-listen} parameter defines how the VPP CLI is made accessible. A local UNIX socket or pair of ip address and port can be used. 
 Additionally, the \texttt{startup-config} parameter (or its alias \texttt{exec}) can be used to provide a file containing CLI commands 
 that are executed automatically after VPP startup.~\cite{fdio-config-reference}
 
