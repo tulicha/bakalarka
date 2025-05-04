@@ -113,32 +113,36 @@ It includes parameters that control how the application runs, where it logs outp
 The \texttt{nodaemon} parameter prevents VPP from running in the background. 
 The \texttt{log} parameter specifies the path to the log file, typically set to \texttt{/var/log/vpp/vpp.log}. 
 The \texttt{cli-listen} parameter defines how the VPP CLI is made accessible -- by default through a UNIX domain socket at \texttt{/run/vpp/cli.sock}. 
-Additionally, the \texttt{startup-config} parameter (or its alias \texttt{exec}) can be used to provide a file containing CLI commands that are executed automatically after VPP starts.
+Additionally, the \texttt{startup-config} parameter (or its alias \texttt{exec}) can be used to provide a file containing CLI commands 
+that are executed automatically after VPP startup.~\cite{fdio-config-reference}
 
   \item \textbf{The api-trace section} controls how API message tracing is handled within VPP.  
 This section is primarily used for debugging and development purposes. 
-API message tracing is typically enabled using the \texttt{api-trace on} command.
+API message tracing is typically enabled using the \texttt{api-trace on} command.~\cite{fdio-config-reference}
 
   \item \textbf{The cpu section} is used to configure how VPP threads are mapped to CPU cores.  
 The \texttt{main-core} parameter specifies the core on which the main thread runs.  
 The \texttt{corelist-workers} parameter defines a list of cores used by worker threads responsible for packet processing.  
-The \texttt{scheduler-policy} parameter allows selecting a thread scheduling strategy, such as \texttt{fifo}, \texttt{rr}, or others, depending on the desired behavior.
+The \texttt{scheduler-policy} parameter allows selecting a thread scheduling strategy, such as \texttt{fifo}, \texttt{rr}, or others, depending on the desired behavior.~\cite{fdio-config-reference}
 
-  \item \textbf{The buffers section} allows configuring the size and number of memory buffers used by VPP for packet processing.  
+  \item \textbf{The buffers section} allows configuring the size and number of memory buffers used by VPP for packet processing.~\cite{fdio-config-reference}  
 
   \item \textbf{The dpdk section} configures how DPDK is initialized and used by VPP.
 The \texttt{dev} parameter specifies the PCI address of a network interface to be managed by VPP/DPDK.  
 The \texttt{uio-driver} parameter sets the kernel module providing user-space access to be used, commonly \texttt{vfio-pci}.  
 The \texttt{num-mbufs} parameter defines the number of memory buffers allocated for packet processing.  
-Additional options include parameters such as \texttt{num-rx-queues} and \texttt{num-tx-queues}, which specify the number of receive and transmit queues for each device.
+Additional options include parameters such as \texttt{num-rx-queues} and \texttt{num-tx-queues}, which specify the number of receive and transmit queues for each device.~\cite{fdio-config-reference}
 
   \item \textbf{The plugins section} allows enabling or disabling individual VPP plugins during startup.  
-Each plugin can be explicitly marked as \texttt{enable} or \texttt{disable}, depending on whether it should be loaded. It is also possible to disable all plugins by default.  
+Each plugin can be explicitly marked as \texttt{enable} or \texttt{disable}, depending on whether it should be loaded. It is also possible to disable all plugins by default.~\cite{fdio-config-reference}  
 
 \end{itemize}
 
-Other configuration sections exist for advanced or highly specific use cases, such as memory tuning, internal event logging, or telemetry export\dots; 
+Other configuration sections exist for advanced or highly specific use cases, such as memory tuning, internal event logging, or telemetry export, 
 and are, to the author's best knowledge, used only in fine-tuned or specialized deployments.
+
+
+
 
 
 
