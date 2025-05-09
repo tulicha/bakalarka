@@ -99,7 +99,7 @@ In the former case, the \texttt{dpdk-devbind.py} utility can be used to rebind i
 This setup is required for DPDK to successfully initialize the specified network interface.~\cite{dpdk-linux-drivers}
 
 \subsubsection{Startup Configuration}
-Although VPP can be started with command-line arguments, such as \verb|/usr/bin/vpp unix { interactive cli-listen 127.0.0.1:5002 }|, which can be useful for debugging purposes, 
+Although VPP can be started with command-line arguments, such as \texttt{/usr/bin/vpp unix \{ interactive cli-listen 127.0.0.1:5002 \}}, which can be useful for debugging purposes, 
 it is typically started using a configuration file. 
 The default configuration file is located at \texttt{/etc/vpp/startup.conf}, but a custom file can also be specified.
 When not using \texttt{systemd}, a specific configuration file can be passed manually via the \texttt{-c} parameter, 
