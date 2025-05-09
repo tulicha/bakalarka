@@ -24,8 +24,8 @@ This allows for a direct comparison between VPP and traditional kernel-based for
 
 \subsection{One-way forwarding}
 
-These tests were conducted in a one-way configuration, as suggested by RFC2544\cite{rfc2544}.
-This scenario can simulate networks with asymmetric traffic patterns (e.g., an HTTP server) or reflect conditions similar to a DoS attack.
+These tests were conducted in a one-way configuration, as suggested by RFC~2544\cite{rfc2544}.
+This scenario can simulate networks with asymmetric traffic patterns (e.g., a web server) or reflect conditions similar to a DoS attack.
 
 %----------------------------------
 \subsubsection{1 Gbps Test Results}
@@ -474,7 +474,7 @@ The average latency of the Linux stack increased, which may be attributed to a l
 VPP-1 & 5.82 & 35.26 & 292.45 & 122.15 \\
 VPP-4 & 6.56 & 0.00 & 28.80 & 9.90 \\
 VPP-10 & 8.00 & 0.00 & 35.45 & 14.35 \\
-Linux & TODO &  &  &  \\
+Linux & 7.56 & 69.84 & 6621.50 & 892.35 \\
 \hline
 \end{tabular}
 \label{tab:40udp:512B}
@@ -555,6 +555,12 @@ Linux & 7.36 & 0.08 & 195.05 & 122.05 \\
 \label{tab:40udp:1518B}
 \end{table}
 
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/consumption-40g.png}
+    \caption{Energy efficiency per delivered data in one-way 40\,Gbit/s.}
+    \label{fig:40g}
+\end{figure}
 
 
 
