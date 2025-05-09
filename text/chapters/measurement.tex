@@ -1,4 +1,31 @@
+To provide a comprehensive and representative view, the tests are structured into five subsections, each corresponding to a different Ethernet frame size. 
+Four of the selected sizes -- 64 bytes, 512 bytes, 1280 bytes, and 1518 bytes -- are recommended by RFC~2544~\cite{rfc2544} 
+covering both edge cases and practically relevant intermediate values. 
+The fifth size, 889 bytes, was chosen based on real-world traffic analysis by Jurkiewicz et al.~\cite{JURKIEWICZ202115}, who identified it as the average frame size observed in modern network environment.
+This selection covers the full range of standard Ethernet frame sizes, from the minimum to the maximum non-jumbo frames, 
+while also including a statistically representative average.
+
+All tests were conducted at four different transmission speeds -- 1, 10, 25, and 40 Gbit/s -- to evaluate the behavior of each configuration under varying network loads.
+
+Traffic in all scenarios is generated using TRex with the TBD profile,
+which ensures that each packet carries a unique source IP address to simulate multiple concurrent clients, while maintaining a single destination IP per direction.
+Since the aim of this thesis is to evaluate the VPP architecture rather than specific features (e.g., routing table lookup or hashing mechanisms),
+the routing table of the DUT contains only two active forwarding entries corresponding to the test routes,
+along with two administrative entries used for management purposes.
+
+The DUT is configured with the VPP stack and tested under three levels of parallelism: using 1, 4, and 10 worker threads, plus a single main thread in all configurations.
+The worker threads are pinned to the NUMA node closest to the NICs to minimize memory access latency.
+The number of RX/TX queues is aligned with the number of active worker threads in each configuration to ensure balanced packet distribution and optimal resource utilization.
+
+To provide a baseline for comparison, all scenarios are also executed using the standard Linux kernel networking stack.
+It is configured with routing and interface parameters equivalent to the VPP setup, utilizing all 10 CPU cores on the NUMA node closest to the NICs.
+RPS is enabled, with affinities set evenly across the cores.
+This allows for a direct comparison between VPP and traditional kernel-based forwarding in terms of performance and energy efficiency.
+
 \subsection{One-way forwarding}
+
+These tests were conducted in a one-way configuration, as suggested by RFC2544\cite{rfc2544}.
+This scenario can simulate networks with asymmetric traffic patterns (e.g., an HTTP server) or reflect conditions similar to a DoS attack.
 
 %----------------------------------
 \subsubsection{1 Gbps Test Results}
@@ -533,215 +560,6 @@ Linux & 7.36 & 0.08 & 195.05 & 122.05 \\
 
 
 
-%-------------------------------------------------------------------------------
-\subsection{Bidirectional UDP 1 Gbit/s}
-TOTO ODSTRANIT!!!!\\
-zatím ponecháno jen kvůli úvodu\\
-
-This section presents a set of performance and efficiency tests performed on the Device Under Test (DUT) using bidirectional UDP traffic at a total rate of 1\,Gbit/s. 
-The goal is to evaluate the forwarding performance of the DUT under varying packet sizes, simulating realistic traffic patterns with increasing stress on the packet-processing path.
-
-To provide a comprehensive and representative view, the tests are structured into five subsections, each corresponding to a different Ethernet frame size. 
-Four of the selected sizes -- 64 bytes, 512 bytes, 1280 bytes, and 1518 bytes -- are recommended by RFC2544\cite{rfc2544} 
-covering both edge-cases and practically relevant intermediate values. 
-The fifth size, 889 bytes, was chosen because it was identified as the average size in real-world network traffic by Jurkiewicz et al.~\cite{JURKIEWICZ202115}. 
-This selection covers the full range of standard Ethernet frame sizes, from the minimum to the maximum non-jumbo frames, 
-and includes a representative average frame size observed in real network traffic.
-
-Traffic in all scenarios is generated using TRex with the \textit{udp\_1pkt\_src\_ip\_split.py} profile, 
-which ensures that each packet carries a unique source IP address to simulate multiple concurrent clients, while maintaining a single destination IP per direction. 
-The routing table of the DUT contains only two active forwarding entries, corresponding to the test routes, in addition to two administrative entries used for management.
-The total offered load is 1\,Gbit/s, symmetrically split between both directions (500\,Mbit/s each).
-The chosen load of 1 Gbit/s is representative of a realistic aggregate traffic pattern that could be observed in a small or medium-sized enterprise network, especially when routed through a central gateway.
-
-The DUT is configured with the Vector Packet Processing (VPP) stack and tested under three levels of parallelism: using 1, 4, and 10 worker threads. 
-The number of RX/TX queues is aligned with the number of active worker threads in each configuration to ensure balanced packet distribution and optimal resource utilization.
-
-To provide a baseline for comparison, all scenarios are also executed using the standard Linux kernel networking stack, 
-configured with equivalent routing and interface parameters, but able to use all 20 cores of CPU. 
-This allows for a direct comparison between VPP and traditional kernel-based forwarding in terms of performance and energy efficiency.
-
-The aim of this test is to observe the behavior of the VPP forwarding plane under low traffic load of small packets and to evaluate its energy efficiency.
-
-%-------------------------------------------------------------------------------
-\subsubsection{64-bytes frames}
-This test evaluates the behavior of the VPP forwarding plane under a low-throughput traffic load composed of minimum-sized Ethernet frames (64 bytes). 
-Such frames result in a high packet-per-second rate for a given bandwidth, which increases the processing overhead per bit of data. 
-This configuration represents a stress scenario for packet forwarding and allows assessment of the system’s efficiency in handling a large number of small packets.
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|l|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Configuration}} &
-\multicolumn{1}{c|}{\textbf{Watts used}} &
-\multicolumn{1}{c|}{\textbf{PPW}} &
-\multicolumn{1}{c|}{\textbf{BPW}} \\
-\hline
-VPP -- 1 worker & 848.08 & 20 726 965.60 & 1 326 525 798.50 \\
-VPP -- 4 workers & 951.03 & 18 483 249.76 & 1 182 927 982.40 \\
-VPP -- 10 workers & 1 193.56 & 14 727 474.94 & 942 558 396.09 \\
-Linux stack & 1 257.25 & 13 981 407.81 & 894 810 100.29 \\
-\hline
-\end{tabular}
-\caption{Result of Bidirectional UDP 1 Gbit/s of 64-bytes packets test}
-\label{tab:udp:one}
-\end{table}
-
-As the results in Table \ref{tab:udp:one} show, the power consumption increases notably with the number of worker threads in the VPP stack. 
-While all VPP configurations deliver identical packet and byte throughput, the most energy-efficient setup in this measurement is the single-worker variant, consuming roughly 850 Watts during the test. 
-In contrast, the traditional Linux network stack demonstrates the highest energy usage, despite handling the same volume of packets.
-
-This discrepancy can likely be attributed to the cost of processing a high number of small packets in kernel space. 
-Since the test uses fixed-size 64-byte frames, which are known to generate frequent system calls and context switches in Linux, 
-the forwarding path becomes less efficient compared to VPP’s user-space architecture, where such overheads are significantly reduced. 
-The results highlight the energy cost of kernel-based packet forwarding in scenarios dominated by small-packet traffic.
-
-%------------------------------------------------------------------------------
-\subsubsection{512-bytes frames}
-This test focuses on the forwarding performance of the VPP data plane when processing medium-sized Ethernet frames of 512 bytes. 
-These frames offer a balance between protocol overhead and payload efficiency and are representative of many real-world applications that do not utilize maximum frame sizes. 
-The test helps to evaluate how the system handles typical traffic patterns with moderate packet rates and processing demands.
-
-Notably, the 554-byte frame size (512 bytes of data) represents the historical maximum size of a DNS response over UDP without the use of extension mechanisms such as EDNS(0).\cite{satrapa2023dns} 
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|l|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Configuration}} &
-\multicolumn{1}{c|}{\textbf{Watts used}} &
-\multicolumn{1}{c|}{\textbf{PPW}} &
-\multicolumn{1}{c|}{\textbf{BPW}} \\
-\hline
-VPP -- 1 worker & 851.21 & 2 581 343.78 & 1 321 648 015.98 \\
-VPP -- 4 workers & 969.49 & 2 266 413.93 & 1 160 403 931.63 \\
-VPP -- 10 workers & 1 175.07 & 1 869 901.91 & 957 389 779.06 \\
-Linux stack & 965.58 & 2 275 591.60 & 1 165 102 847.70 \\
-\hline
-\end{tabular}
-\caption{Result of Bidirectional UDP 1 Gbit/s of 512-bytes frames test}
-\label{tab:udp:two}
-\end{table}
-
-As seen in the result Table \ref{tab:udp:two}, the power consumption of VPP remains stable. 
-On the other hand, compared to the 64-byte scenario, the Linux stack shows improved energy efficiency when handling 512-byte packets. 
-This is primarily due to the lower packet-per-second (PPS) rate associated with larger frames, which reduces the overhead caused by frequent context switches and system calls in the kernel space. 
-Although the Linux stack remains slightly less efficient than VPP with one worker in this scenario, the margin is smaller than in the minimum-packet-size test.
-
-%------------------------------------------------------------------------------
-\subsubsection{889-bytes frames}
-This test focuses on the forwarding performance of the VPP data plane when processing medium-sized Ethernet frames of 889 bytes. 
-These frames offer a favorable balance between protocol overhead and payload efficiency. 
-As mentioned earlier, this size was identified as the average frame size observed in real-world network traffic, according to a study by Jurkiewicz et al.~\cite{JURKIEWICZ202115}.
-
-The test helps evaluate how the system handles traffic patterns that more closely resemble typical production environments, where packet sizes vary but tend to concentrate around this average. 
-Compared to minimum-sized or maximum-sized frames, the 889-byte frame represents a realistic mid-point for both packet rate and processing complexity.
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|l|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Configuration}} &
-\multicolumn{1}{c|}{\textbf{Watts used}} &
-\multicolumn{1}{c|}{\textbf{PPW}} &
-\multicolumn{1}{c|}{\textbf{BPW}} \\
-\hline
-VPP -- 1 worker & 853.27 & 1 483 079.03 & 1 318 457 253.58 \\
-VPP -- 4 workers & 952.46 & 1 328 629.91 & 1 181 151 986.18 \\
-VPP -- 10 workers & 1 190.42 & 1 063 042.32 & 945 044 623.54 \\
-Linux stack & 940.33 & 1 345 768.87 & 1 196 388 523.99 \\
-\hline
-\end{tabular}
-\caption{Result of Bidirectional UDP 1 Gbit/s of 889-bytes frames test}
-\label{tab:udp:three}
-\end{table}
-
-As shown in Table \ref{tab:udp:three}, the third test with 889-byte frames, 
-VPP's power consumption remains stable across different worker thread configurations. 
-In the case of the Linux stack, energy efficiency improves slightly compared to the previous (512-byte) test, though the difference is minimal. 
-The change is significantly smaller than the improvement observed between the 64-byte and 512-byte scenarios, suggesting that the impact of increasing frame size becomes less pronounced beyond a certain point.
-
-%-------------------------------------------------------------------------------
-\subsubsection{1280-bytes frames}
-This test focuses on the forwarding performance of the VPP data plane when processing large Ethernet frames of 1280 bytes. 
-These frames represent a size commonly used in environments where larger payloads are transferred, but without exceeding the typical Ethernet MTU limit of 1500 bytes. 
-This size strikes a balance between higher data throughput and maintaining efficient protocol overhead.
-
-The test evaluates how the system handles traffic patterns with higher packet sizes, which are common in applications involving large data transfers such as video streaming, 
-file sharing, or other high-bandwidth scenarios in enterprise and data center environments.
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|l|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Configuration}} &
-\multicolumn{1}{c|}{\textbf{Watts used}} &
-\multicolumn{1}{c|}{\textbf{PPW}} &
-\multicolumn{1}{c|}{\textbf{BPW}} \\
-\hline
-VPP -- 1 worker & 866.91 & 1 013 837.98 & 1 297 712 609.61 \\
-VPP -- 4 workers & 961.01 & 914 565.18 & 1 170 643 425.56 \\
-VPP -- 10 workers & 1188.39 & 739 577.31 & 946 658 957.41 \\
-Linux stack & 926.77 & 948 354.26 & 1 213 893 456.20 \\
-\hline
-\end{tabular}
-\caption{Result of Bidirectional UDP 1 Gbit/s of 1280-frames test}
-\label{tab:udp:four}
-\end{table}
-
-The results in Table \ref{tab:udp:four} show a continued trend: power consumption increases with the number of worker threads, while throughput remains consistent across all VPP configurations. 
-As in previous tests, the single-threaded setup achieves the best energy efficiency.
-
-The Linux stack demonstrates slightly better energy efficiency than in the 889-byte test, but the improvement is again minimal. 
-Compared to the large gain seen between the 64-byte and 512-byte cases, the impact of increasing frame size beyond this point becomes progressively less significant. 
-This suggests diminishing returns in energy efficiency as packet sizes grow and per-packet processing overhead decreases.
-
-%-------------------------------------------------------------------------------
-\subsubsection{1518-bytes frames}
-This test evaluates the performance of the VPP forwarding plane when handling full-sized Ethernet frames (1518 bytes, including headers). 
-These frames represent the upper limit of standard Ethernet without jumbo frame extensions and provide throughput efficiency under optimal conditions, 
-as the ratio of payload to protocol overhead is maximized. The goal is to observe how the system behaves when forwarding large packets that minimize per-packet processing overhead.
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|l|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Configuration}} &
-\multicolumn{1}{c|}{\textbf{Watts used}} &
-\multicolumn{1}{c|}{\textbf{PPW}} &
-\multicolumn{1}{c|}{\textbf{BPW}} \\
-\hline
-VPP -- 1 worker & 854.66 & 867 136.33 & 1 316 312 956.40 \\
-VPP -- 4 workers & 972.93 & 761 726.68 & 1 156 301 102.16 \\
-VPP -- 10 workers & 1 192.34 & 621 556.55 & 943 522 846.94 \\
-Linux stack & 930.32 & 796 614.86 & 1 209 261 363.10 \\
-\hline
-\end{tabular}
-\caption{Result of Bidirectional UDP 1 Gbit/s of 1518-frames test}
-\label{tab:udp:five}
-\end{table}
-
-As shown in Table \ref{tab:udp:five}, all VPP configurations deliver comparable throughput, with energy efficiency peaking once again in the single-threaded setup. 
-Interestingly, the total power consumption of the VPP stack remains close to that observed in the other tests.
-
-The Linux stack turned out to be slightly more power-hungry than in the previous test. 
-However, the difference is small enough that it could fall within the margin of measurement error, suggesting that any further efficiency improvements with larger frames are likely negligible.
-
-\subsubsection{Test Conclusion}
-The VPP stack showed consistent power consumption across all tested frame sizes and thread configurations. 
-This was expected, as VPP operates in a polling mode rather than being event-driven -- even when no packets are being processed, 
-it continuously polls the network interface, keeping the CPU cores active regardless of traffic load or packet size.
-
-The Linux stack, on the other hand, did not manage to outperform single-threaded VPP even in the most favorable condition -- when forwarding full-sized 1518-byte frames. 
-This result highlights the inefficiency of the kernel-based packet processing path, where context switching, interrupt handling, and per-packet overhead remain costly even under optimized traffic conditions.
-
-Moreover, it can be expected that under higher traffic loads, the Linux kernel stack would perform even less efficiently. 
-As packet rates increase, the overhead introduced by interrupt handling, context switching, and kernel-user transitions becomes more pronounced -- all of which are avoided in VPP's user-space architecture
-thanks to its polling-based model. This suggests that the performance and energy efficiency gap between VPP and the Linux stack would likely widen in more demanding scenarios.
-
-\section{TBD}
-iperf3, další scénáře...
 
 
 

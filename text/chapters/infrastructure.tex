@@ -1,5 +1,5 @@
-The testing infrastructure has been implemented as recomended in RFC 2544, which defines methods for evaluating network performance. 
-It consists of a device under test (DUT), connected to a measurement device called \textit{Tester}.\footnote{The hardware used in this testing setup was loaned free of charge for the purposes of this bachelor thesis by Silicon Hill club.}.
+The testing infrastructure has been implemented as recomended in RFC 2544~\cite{rfc2544}, which defines methods for evaluating network performance. 
+It consists of a device under test (DUT), connected to a measurement device called \textit{Tester}\footnote{The hardware used in this testing setup was loaned free of charge for the purposes of this bachelor thesis by Silicon Hill club.}.
 In line with the more modern RFC 8219, which states that: ``All tests described SHOULD be performed with bidirectional traffic''~\cite{RFC8219}, the infrastructure is designed to operate with bidirectional traffic. 
 This approach ensures more accurate performance measurement under real-world network conditions, as opposed to unidirectional traffic.
 The Device Under Test (DUT) and the measurement device are connected using 100Gbit capable cables, preventing any potential bottlenecks in the connection.
@@ -21,6 +21,7 @@ The hardware of DUT is shown in table \ref{tab:hardware_dut}.
 
 \begin{table}[h!]
 \centering
+\caption{Hardware details for DUT (Device Under Test)}
 \begin{tabular}{|c|c|}
 \hline
 \textbf{Hardware Component} & \textbf{DUT (Device Under Test)} \\
@@ -36,7 +37,6 @@ The hardware of DUT is shown in table \ref{tab:hardware_dut}.
 \textbf{Network Interface Cards (NIC)} & Mellanox ConnectX-6 Dx (Dual-port) \\
 \hline
 \end{tabular}
-\caption{Hardware details for DUT (Device Under Test)}
 \label{tab:hardware_dut}
 \end{table}
 
@@ -45,6 +45,7 @@ Its physical features are shown in table \ref{tab:hardware_tester}.
 
 \begin{table}[h!]
 \centering
+\caption{Hardware details for Tester (Measurement Device)}
 \begin{tabular}{|c|c|}
 \hline
 \textbf{Hardware Component} & \textbf{Tester (Measurement Device)} \\
@@ -60,7 +61,6 @@ Its physical features are shown in table \ref{tab:hardware_tester}.
 \textbf{Network Interface Cards (NIC)} & 2x Mellanox ConnectX-5 \\
 \hline
 \end{tabular}
-\caption{Hardware details for Tester (Measurement Device)}
 \label{tab:hardware_tester}
 \end{table}
 
