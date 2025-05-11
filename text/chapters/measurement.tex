@@ -16,6 +16,7 @@ along with two administrative entries used for management purposes.
 The DUT is configured with the VPP stack and tested under three levels of parallelism: using 1, 4, and 10 worker threads, plus a single main thread in all configurations.
 The worker threads are pinned to the NUMA node closest to the NICs to minimize memory access latency.
 The number of RX/TX queues is aligned with the number of active worker threads in each configuration to ensure balanced packet distribution and optimal resource utilization.
+In the tables, the number of worker threads is denoted as VPP-X, where X indicates the number of worker threads used.
 
 To provide a baseline for comparison, all scenarios are also executed using the standard Linux kernel networking stack.
 It is configured with routing and interface parameters equivalent to the VPP setup, utilizing all 10 CPU cores on the NUMA node closest to the NICs.
@@ -563,16 +564,5 @@ Linux & 7.36 & 0.08 & 195.05 & 122.05 \\
 \end{figure}
 
 
-
-
-\subsection{Bidirectional forwarding}
-
-In line with the more modern RFC~8219, which states that: ``All tests described SHOULD be performed with bidirectional traffic''~\cite{RFC8219}, 
-the same tests were also repeated under bidirectional traffic conditions. These tests resemble a network scenario with balanced traffic flow in both directions.
-
-\subsubsection{1 Gbps Test Results}
-\subsubsection{10 Gbps Test Results}
-\subsubsection{25 Gbps Test Results}
-\subsubsection{40 Gbps Test Results}
 
 
