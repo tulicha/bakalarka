@@ -7,8 +7,8 @@ while also including a statistically representative average.
 
 All tests were conducted at four different transmission speeds -- 1, 10, 25, and 40 Gbit/s -- to evaluate the behavior of each configuration under varying network loads.
 
-Traffic in all scenarios is generated using TRex with the TBD profile,
-which ensures that each packet carries a unique source IP address to simulate multiple concurrent clients, while maintaining a single destination IP per direction.
+All traffic was generated using TRex with the example profile included in Appendix~\ref{appendix:trex-profile}.
+which ensures that each packet carries a varying source IP address to simulate multiple concurrent clients, while maintaining a single destination IP per direction.
 Since the aim of this thesis is to evaluate the VPP architecture rather than specific features (e.g., routing table lookup or hashing mechanisms),
 the routing table of the DUT contains only two active forwarding entries corresponding to the test routes,
 along with two administrative entries used for management purposes.
@@ -23,10 +23,15 @@ It is configured with routing and interface parameters equivalent to the VPP set
 RPS is enabled, with affinities set evenly across the cores.
 This allows for a direct comparison between VPP and traditional kernel-based forwarding in terms of performance and energy efficiency.
 
+In order to cover common real-world deployment scenarios, three traffic patterns were evaluated: one-way forwarding, bi-directional (both-way) forwarding, and NAT with forwarding.
+These scenarios represent typical use cases encountered in small to medium-sized ISP or enterprise environments, where Linux or VPP may be deployed as the primary software-based router.
+NAT is a commonly used feature in smaller ISP deployments. As it is a computationally intensive operation, the key question in this context is how it affects overall performance.
+
 \subsection{One-way forwarding}
 
 These tests were conducted in a one-way configuration, as suggested by RFC~2544~\cite{rfc2544}.
-This scenario can simulate networks with asymmetric traffic patterns (e.g., a~web server) or reflect conditions similar to a DoS attack.
+Such a setup can represent asymmetric traffic patterns commonly found in real-world scenarios -- for example, downstream-heavy services like web servers or video streaming platforms.
+It can also emulate high-load conditions similar to those observed during denial-of-service (DoS) attacks, where a large volume of traffic targets a single destination. 
 
 %----------------------------------
 \subsubsection{1 Gbps Test Results}
@@ -155,6 +160,13 @@ In contrast, the Linux stack showed a decline in performance across all frame si
 %---------------------------------------------------------------------------------------------
 \subsubsection{25 Gbps Test Results}
 
+As shown in Table~\ref{tab:one-way-25}, none of the configurations were able to deliver all 64-byte frames, which naturally resulted in high latency in that test.
+It can be observed that increasing the frame size beyond 889 bytes had no measurable impact on the performance of any VPP configuration -- the results remain comparable to the previous test.
+In contrast, the Linux stack benefited from larger frames, and the increase in latency in prevoius test seen in the 1518-byte scenario compared to the 1280-byte scenario 
+did not occur at this higher transmission rate.
+An interesting observation is that when VPP drops packets, the ones that are not dropped tend to be delivered with significantly lower latency.
+This is likely due to newer packets overwriting older ones in the NIC’s RX ring buffers.
+
 \begin{table}[h!]
 \centering
 \caption{Results of one-way 25~Gbit/s tests}
@@ -188,13 +200,13 @@ In contrast, the Linux stack showed a decline in performance across all frame si
                                         & Linux  & 7.00 & 0.00  & 130.00   & 105.30 \\
 \hline
 \end{tabular}
-\label{tab:25gbit_combined}
+\label{tab:one-way-25}
 \end{table}
 
-
-
-Figure~\ref{fig:25g} illustrates the energy efficiency of each configuration in terms of delivered packets and bytes.
-Compared to the previous test, the Linux stack performed significantly worse, while VPP maintained stable BPWh, except in the case of 64-byte frames.
+Figure~\ref{fig:25g} illustrates the energy efficiency observed during the 25~Gbit/s test.
+The drop in BPWh across all configurations in 64-byte frame test is primarily caused by high packet loss.
+Compared to the previous test, the Linux stack performed significantly worse -- even at the largest frame size -- while all VPP configurations maintained stable BPWh values, 
+except in the case of 64-byte frames.
 
 \begin{figure}[!htbp]
     \centering
@@ -206,6 +218,13 @@ Compared to the previous test, the Linux stack performed significantly worse, wh
 
 %-----------------------------------
 \subsubsection{40 Gbps Test Results}
+
+As shown in Table~\ref{tab:one-way-40}, the 64-byte frame test resulted in even higher packet loss than in the previous test.
+However, the latency statistics for VPP remained comparable to those observed earlier, despite the increased loss.
+In this test, the Linux stack failed to deliver all data across all frame sizes, which again led to consistently high latency.
+When no data were dropped, all VPP configurations performed similarly, maintaining low and stable latency.
+These results clearly highlight the advantage of VPP over the traditional Linux network stack under heavy traffic loads.
+Notably, even the least resource-intensive VPP configuration (VPP-1) significantly outperformed the Linux stack in both latency and reliability, demonstrating VPP’s efficiency even with minimal parallelism.
 
 \begin{table}[h!]
 \centering
@@ -240,8 +259,13 @@ Compared to the previous test, the Linux stack performed significantly worse, wh
                                         & Linux  & 7.36 & 0.08  & 195.05   & 122.05 \\
 \hline
 \end{tabular}
-\label{tab:40gbit_combined}
+\label{tab:one-way-40}
 \end{table}
+
+The energy efficiency graph shown in Fig.~\ref{fig:40g} illustrates that VPP maintained stable BPWh values when no packets were dropped, 
+while the Linux stack again exhibited even lower energy efficiency per delivered data.
+This result confirms and completes the trend observed in the previous tests.
+
 
 \begin{figure}[!htbp]
     \centering

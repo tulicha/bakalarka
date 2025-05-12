@@ -1,5 +1,5 @@
 The testing infrastructure has been implemented as recomended in RFC 2544~\cite{rfc2544}, which defines methods for evaluating network performance. 
-It consists of a device under test (DUT), connected to a measurement device called \textit{Tester}\footnote{The hardware used in this testing setup was loaned free of charge for the purposes of this bachelor thesis by Silicon Hill club.}.
+It consists of a device under test (DUT), connected to a measurement device called Tester\footnote{The hardware used in this testing setup was loaned free of charge for the purposes of this bachelor thesis by Silicon Hill club.}.
 
 The Device Under Test (DUT) and the measurement device are connected using 100~Gbit capable cables, preventing any potential bottlenecks in the connection.
 The illustration of this hardware setup is shown in fig. \ref{fig:hardware-setup}
@@ -31,7 +31,7 @@ The hardware of DUT is shown in table \ref{tab:hardware_dut}.
 \hline
 \textbf{Cores} & 10 physical cores each (one thread per core) \\
 \hline
-\textbf{Memory (RAM)} & Size, type, speed \\
+\textbf{Memory (RAM)} & TODO! Size, type, speed \\
 \hline
 \textbf{Network Interface Cards (NIC)} & Mellanox ConnectX-6 Dx (Dual-port) \\
 \hline
@@ -55,7 +55,7 @@ Its physical features are shown in table \ref{tab:hardware_tester}.
 \hline
 \textbf{Cores} & 12 physical cores each (two threads per core)\\
 \hline
-\textbf{Memory (RAM)} & Size, type, speed \\
+\textbf{Memory (RAM)} & TODO! Size, type, speed \\
 \hline
 \textbf{Network Interface Cards (NIC)} & 2x Mellanox ConnectX-5 \\
 \hline
@@ -63,6 +63,7 @@ Its physical features are shown in table \ref{tab:hardware_tester}.
 \label{tab:hardware_tester}
 \end{table}
 
-The DUT is running Debian GNU/Linux 12 (Bookworm) x86\_64 with Linux kernel version \textit{6.1.0-32-amd64}, VPP v25.02-release, and DPDK version 24.11.1.
+The DUT is running Debian GNU/Linux 12 (Bookworm) x86\_64 with Linux kernel version \textit{6.1.0-32-amd64}, VPP v25.02-release, and DPDK version 24.11.1. 
+This kernel version is the current standard long-term support (LTS) release provided with Debian 12 (Bookworm) and was used for all tests involving the Linux networking stack.
 
-The tester is running \dots{}
+The tester generates traffic using Cisco TRex version 3.06.

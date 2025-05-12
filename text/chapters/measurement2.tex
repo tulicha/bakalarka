@@ -1,215 +1,103 @@
 \subsection{Bidirectional forwarding}
 
-In line with the more modern RFC~8219, which states that: ``All tests described SHOULD be performed with bidirectional traffic''~\cite{RFC8219}, 
-the same tests were also repeated under bidirectional traffic conditions. These tests resemble a network scenario with balanced traffic flow in both directions.
+In accordance with the recommendations of RFC~8219~\cite{RFC8219}, which -- although focused on IPv6 transition technologies -- 
+also defines general benchmarking principles, the same test scenarios were executed under bidirectional traffic conditions.  
+This configuration reflects a more realistic networking environment where traffic flows simultaneously in both directions, such as in point-to-point communications,a
+ VPN tunnels, or client-server interactions involving both requests and responses.  
+Unlike the one-way setup, bidirectional forwarding places a greater strain on system resources by utilizing both receive (RX) and transmit (TX) paths concurrently, 
+which may reveal bottlenecks or limitations not evident in unidirectional traffic scenarios.
 
 \subsubsection{1 Gbps Test Results}
 
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 1 Gbit/s of 64-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.42 & 0.00 & 27.83 & 10.48 \\
-VPP-4 & 6.30 & 0.00 & 30.18 & 14.08 \\
-VPP-10 & 8.00 & 0.00 & 30.45 & 13.48 \\
-Linux &  &  &  &  \\
-\hline
-\end{tabular}
-\label{tab:1budp:64B}
-\end{table}
 
 \begin{table}[h!]
 \centering
-\caption{Results of bidirectional 1 Gbit/s of 512-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
+\caption{Results of bidirectional 1~Gbit/s tests}
+\begin{tabular}{|c|l|r|r|r|r|}
 \hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.80 & 0.00 & 28.05 & 15.70 \\
-VPP-4 & 6.45 & 0.00 & 26.73 & 17.30 \\
-VPP-10 & 7.93 & 0.00 & 24.56 & 16.30 \\
-Linux &  &  &  &  \\
+\textbf{} & \textbf{Config} & \textbf{Energy [Wh]} & \textbf{Pkt Loss [\%]} & \textbf{Avg Lat [$\mu$s]} & \textbf{Jitter [$\mu$s]} \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{64B}}    
+    & VPP-1  & 5.42 & 0.00 & 27.83 & 10.48 \\
+    & VPP-4  & 6.30 & 0.00 & 30.18 & 14.08 \\
+    & VPP-10 & 8.00 & 0.00 & 30.45 & 13.48 \\
+    & Linux  &      &      &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{512B}}   
+    & VPP-1  & 5.80 & 0.00 & 28.05 & 15.70 \\
+    & VPP-4  & 6.45 & 0.00 & 26.73 & 17.30 \\
+    & VPP-10 & 7.93 & 0.00 & 24.56 & 16.30 \\
+    & Linux  &      &      &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{889B}}   
+    & VPP-1  & 5.66 & 0.00 & 26.10 & 14.50 \\
+    & VPP-4  & 6.43 & 0.00 & 26.13 & 17.53 \\
+    & VPP-10 & 7.78 & 0.00 & 26.28 & 17.00 \\
+    & Linux  &      &      &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1280B}}  
+    & VPP-1  & 5.75 & 0.00 & 25.20 & 12.45 \\
+    & VPP-4  & 6.39 & 0.00 & 13.15 & 9.08  \\
+    & VPP-10 & 7.85 & 0.00 & 27.40 & 18.33 \\
+    & Linux  &      &      &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1518B}}  
+    & VPP-1  & 5.77 & 0.00 & 25.10 & 13.15 \\
+    & VPP-4  & 6.36 & 0.00 & 25.53 & 15.63 \\
+    & VPP-10 &      &      &       &       \\
+    & Linux  &      &      &       &       \\
 \hline
 \end{tabular}
-\label{tab:1budp:512B}
+\label{tab:bidirectional-1g}
 \end{table}
 
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 1 Gbit/s of 889-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.66 & 0.00 & 26.10 & 14.50 \\
-VPP-4 & 6.43 & 0.00 & 26.13 & 17.53 \\
-VPP-10 & 7.78 & 0.00 & 26.28 & 17.00 \\
-Linux &  &  &  &  \\
-\hline
-\end{tabular}
-\label{tab:1budp:889B}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 1 Gbit/s of 1280-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.75 & 0.00 & 25.20 & 12.45 \\
-VPP-4 & 6.39 & 0.00 & 13.15 & 9.08 \\
-VPP-10 & 7.85 & 0.00 & 27.40 & 18.33 \\
-Linux &  &  &  &  \\
-\hline
-\end{tabular}
-\label{tab:1budp:1280B}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 1 Gbit/s of 1518-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.77 & 0.00 & 25.10 & 13.15 \\
-VPP-4 & 6.36 & 0.00 & 25.53 & 15.63 \\
-VPP-10 & TODO? &  &  &   \\
-Linux &  &  &  &  \\
-\hline
-\end{tabular}
-\label{tab:1budp:1518B}
-\end{table}
 
 %-----------------------------------
 %-----------------------------------
 %-----------------------------------
 \subsubsection{10 Gbps Test Results}
 
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 10 Gbit/s of 64-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.52 & 70.40 & 537.43 & 12.15 \\
-VPP-4 & 6.51 & 30.47 & 188.40 & 7.23 \\
-VPP-10 & 8.40 & 0.00 & 42.05 & 12.55 \\
-Linux &  &  &  &  \\
-\hline
-\end{tabular}
-\label{tab:10budp:64B}
-\end{table}
 
 \begin{table}[h!]
 \centering
-\caption{Results of bidirectional 10 Gbit/s of 512-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
+\caption{Results of bidirectional 10~Gbit/s tests}
+\begin{tabular}{|c|l|r|r|r|r|}
 \hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.80 & 0.00 & 27.75 & 11.73 \\
-VPP-4 & 6.55 & 0.00 & 32.50 & 14.48 \\
-VPP-10 & 7.99 & 0.00 & 30.58 & 15.38 \\
-Linux &  &  &  &  \\
+\textbf{} & \textbf{Config} & \textbf{Energy [Wh]} & \textbf{Pkt Loss [\%]} & \textbf{Avg Lat [$\mu$s]} & \textbf{Jitter [$\mu$s]} \\
 \hline
-\end{tabular}
-\label{tab:10budp:512B}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 10 Gbit/s of 889-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
+\multirow{4}{*}{\rotatebox{90}{64B}}    
+    & VPP-1  & 5.52 & 70.40 & 537.43 & 12.15 \\
+    & VPP-4  & 6.51 & 30.47 & 188.40 & 7.23  \\
+    & VPP-10 & 8.40 & 0.00  & 42.05  & 12.55 \\
+    & Linux  &      &       &        &       \\
 \hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.77 & 0.00 & 34.00 & 15.15 \\
-VPP-4 & 6.55 & 0.00 & 32.50 & 14.48 \\
-VPP-10 & 7.98 & 0.00 & 30.50 & 16.35 \\
-Linux &  &  &  &  \\
+\multirow{4}{*}{\rotatebox{90}{512B}}   
+    & VPP-1  & 5.80 & 0.00 & 27.75 & 11.73 \\
+    & VPP-4  & 6.55 & 0.00 & 32.50 & 14.48 \\
+    & VPP-10 & 7.99 & 0.00 & 30.58 & 15.38 \\
+    & Linux  &      &      &       &       \\
 \hline
-\end{tabular}
-\label{tab:10budp:889B}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 10 Gbit/s of 1280-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
+\multirow{4}{*}{\rotatebox{90}{889B}}   
+    & VPP-1  & 5.77 & 0.00 & 34.00 & 15.15 \\
+    & VPP-4  & 6.55 & 0.00 & 32.50 & 14.48 \\
+    & VPP-10 & 7.98 & 0.00 & 30.50 & 16.35 \\
+    & Linux  &      &      &       &       \\
 \hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.81 & 0.00 & 34.15 & 14.86 \\
-VPP-4 & 6.37 & 0.00 & 32.73 & 16.88 \\
-VPP-10 & 8.01 & 0.00 & 32.20 & 15.85 \\
-Linux &  &  &  &  \\
+\multirow{4}{*}{\rotatebox{90}{1280B}}  
+    & VPP-1  & 5.81 & 0.00 & 34.15 & 14.86 \\
+    & VPP-4  & 6.37 & 0.00 & 32.73 & 16.88 \\
+    & VPP-10 & 8.01 & 0.00 & 32.20 & 15.85 \\
+    & Linux  &      &      &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1518B}}  
+    & VPP-1  & 5.78 & 0.00 & 33.80 & 16.10 \\
+    & VPP-4  & 6.36 & 0.00 & 25.56 & 15.63 \\
+    & VPP-10 & 7.85 & 0.00 & 27.40 & 18.33 \\
+    & Linux  &      &      &       &       \\
 \hline
 \end{tabular}
-\label{tab:10budp:1280B}
+\label{tab:bidirectional-10g}
 \end{table}
-
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 10 Gbit/s of 1518-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.78 & 0.00 & 33.80 & 16.10 \\
-VPP-4 & 6.36 & 0.00 & 25.56 & 15.63 \\
-VPP-10 & 7.85 & 0.00 & 27.40 & 18.33 \\
-Linux &  &  &  &  \\
-\hline
-\end{tabular}
-\label{tab:10budp:1518B}
-\end{table}
-
 
 %-----------------------------------
 %-----------------------------------
@@ -218,117 +106,48 @@ Linux &  &  &  &  \\
 
 \begin{table}[h!]
 \centering
-\caption{Results of bidirectional 25 Gbit/s of 64-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
+\caption{Results of bidirectional 25~Gbit/s tests}
+\begin{tabular}{|c|l|r|r|r|r|}
 \hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.54 & 88.16 & 545.50 & 12.30 \\
-VPP-4 & 6.60 & 64.58 & 185.08 & 8.18  \\
-VPP-10 & 8.40 & 42.05 & 450.63 & 12.55 \\
-Linux &  &  &  &  \\
+\textbf{} & \textbf{Config} & \textbf{Energy [Wh]} & \textbf{Pkt Loss [\%]} & \textbf{Avg Lat [$\mu$s]} & \textbf{Jitter [$\mu$s]} \\
 \hline
-\end{tabular}
-\label{tab:25budp:64B}
-\end{table}
-
-
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 25 Gbit/s of 512-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
+\multirow{4}{*}{\rotatebox{90}{64B}}    
+    & VPP-1  & 5.54 & 88.16 & 545.50 & 12.30 \\
+    & VPP-4  & 6.60 & 64.58 & 185.08 & 8.18  \\
+    & VPP-10 & 8.40 & 42.05 & 450.63 & 12.55 \\
+    & Linux  &      &       &        &       \\
 \hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.80 & 28.95 & 294.13 & 25.80 \\
-VPP-4 & 6.72 & 0.00  & 38.18  & 13.28 \\
-VPP-10 & 8.20 & 0.00 & 37.38  & 15.43 \\
-Linux &  &  &  &  \\
+\multirow{4}{*}{\rotatebox{90}{512B}}   
+    & VPP-1  & 5.80 & 28.95 & 294.13 & 25.80 \\
+    & VPP-4  & 6.72 & 0.00  & 38.18  & 13.28 \\
+    & VPP-10 & 8.20 & 0.00  & 37.38  & 15.43 \\
+    & Linux  &      &       &        &       \\
 \hline
-\end{tabular}
-\label{tab:25budp:512B}
-\end{table}
-
-
-
-
-
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 25 Gbit/s of 889-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
+\multirow{4}{*}{\rotatebox{90}{889B}}   
+    & VPP-1  & 5.80 & 28.95 & 294.13 & 25.80 \\
+    & VPP-4  & 6.71 & 0.00  & 39.58  & 16.38 \\
+    & VPP-10 & 8.16 & 0.00  & 36.83  & 16.65 \\
+    & Linux  &      &       &        &       \\
 \hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.80 & 28.95 & 294.13 & 25.80 \\
-VPP-4 & 6.71 & 0.00 & 39.58 & 16.38 \\
-VPP-10 & 8.16 & 0.00 & 36.83 & 16.65 \\
-Linux &  &  &  &  \\
+\multirow{4}{*}{\rotatebox{90}{1280B}}  
+    & VPP-1  & 5.86 & 0.00  & 40.40  & 15.73 \\
+    & VPP-4  & 6.63 & 0.00  & 39.43  & 15.55 \\
+    & VPP-10 & 8.22 & 0.00  & 37.93  & 15.25 \\
+    & Linux  &      &       &        &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1518B}}  
+    & VPP-1  & 5.84 & 0.00  & 43.95  & 18.58 \\
+    & VPP-4  & 6.65 & 0.00  & 38.38  & 15.88 \\
+    & VPP-10 & 8.17 & 0.00  & 36.28  & 17.78 \\
+    & Linux  &      &       &        &       \\
 \hline
 \end{tabular}
-\label{tab:25budp:889B}
+\label{tab:bidirectional-25g}
 \end{table}
 
 
 
 
-
-
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 25 Gbit/s of 1280-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.86 & 0.00 & 40.40 & 15.73 \\
-VPP-4 & 6.63 & 0.00 & 39.43 & 15.55 \\
-VPP-10 & 8.22 & 0.00 & 37.93 & 15.25 \\
-Linux &  &  &  &  \\
-\hline
-\end{tabular}
-\label{tab:25budp:1280B}
-\end{table}
-
-
-
-
-
-\begin{table}[h!]
-\centering
-\caption{Results of bidirectional 25 Gbit/s of 1518-byte frames}
-\begin{tabular}{|l|r|r|r|r|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Config}} &
-\multicolumn{1}{c|}{\textbf{Energy [Wh] }} &
-\multicolumn{1}{c|}{\textbf{Pkt Loss [\%]}} &
-\multicolumn{1}{c|}{\textbf{Avg Lat [$\mu$s]}} &
-\multicolumn{1}{c|}{\textbf{Jitter [$\mu$s]}} \\
-\hline 
-VPP-1 & 5.84 & 0.00 & 43.95 & 18.58 \\
-VPP-4 & 6.65 & 0.00 & 38.38 & 15.88 \\
-VPP-10 & 8.17 & 0.00 & 36.28 & 17.78 \\
-Linux &  &  &  &  \\
-\hline
-\end{tabular}
-\label{tab:25budp:1518B}
-\end{table}
 
 
 
