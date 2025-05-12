@@ -31,6 +31,14 @@ This scenario can simulate networks with asymmetric traffic patterns (e.g., a~we
 %----------------------------------
 \subsubsection{1 Gbps Test Results}
 
+As can be seen from the results presented in Table~\ref{tab:one-way-1}, all configurations were able to successfully transmit all data in this low-traffic scenario.
+The VPP-1 configuration performed best across all metrics. Even though this was the least demanding test scenario, the Linux stack still consumed more power than VPP-1.
+In terms of latency, the Linux configuration outperformed both VPP-4 and VPP-10 at frame sizes of 1280B and 1518B.
+However, latency in the Linux setup increased when switching from 1280B to 1518B frames, which can likely be attributed to internal kernel memory copying and buffer processing.
+In contrast, all VPP configurations either maintained or slightly reduced latency with increasing frame size, demonstrating better scalability.
+Interestingly, the single-threaded VPP-1 configuration achieved the lowest latency among all VPP variants.
+This can likely be attributed to the absence of L3 cache trashing. In low-demand scenarios, multithreading may become a disadvantage rather than a benefit.
+
 \begin{table}[h!]
 \centering
 \caption{Results of one-way 1~Gbit/s tests}
@@ -38,42 +46,59 @@ This scenario can simulate networks with asymmetric traffic patterns (e.g., a~we
 \hline
 \textbf{} & \textbf{Config} & \textbf{Energy [Wh]} & \textbf{Pkt Loss [\%]} & \textbf{Avg Lat [$\mu$s]} & \textbf{Jitter [$\mu$s]} \\
 \hline
-\multirow{4}{*}{\rotatebox{90}{64B}}    & VPP-1  & 5.68 & 0.00 & 12.8   & 9.5   \\
+\multirow{4}{*}{\rotatebox{90}{64B}}    & VPP-1  & 5.68 & 0.00 & 12.80  & 9.50  \\
                                         & VPP-4  & 6.46 & 0.00 & 27.45  & 13.55 \\
-                                        & VPP-10 & 7.86 & 0.00 & 28.3   & 12.65 \\
+                                        & VPP-10 & 7.86 & 0.00 & 28.30  & 12.65 \\
                                         & Linux  & 6.78 & 0.00 & 108.05 & 97.25 \\
 \hline
-\multirow{4}{*}{\rotatebox{90}{512B}}   & VPP-1  & 5.69 & 0.00 & 12.1   & 11.7  \\
-                                        & VPP-4  & 6.48 & 0.00 & 22.85  & 17.4  \\
+\multirow{4}{*}{\rotatebox{90}{512B}}   & VPP-1  & 5.69 & 0.00 & 12.10  & 11.70 \\
+                                        & VPP-4  & 6.48 & 0.00 & 22.85  & 17.40 \\
                                         & VPP-10 & 7.91 & 0.00 & 23.80  & 17.35 \\
-                                        & Linux  & 6.23 & 0.00 & 56.1   & 51.35 \\
+                                        & Linux  & 6.23 & 0.00 & 56.10  & 51.35 \\
 \hline
-\multirow{4}{*}{\rotatebox{90}{889B}}   & VPP-1  & 5.76 & 0.00 & 10.3   & 8.4   \\
-                                        & VPP-4  & 6.45 & 0.00 & 21.3   & 17.6  \\
-                                        & VPP-10 & 7.85 & 0.00 & 20.95  & 16.3  \\
-                                        & Linux  & 6.14 & 0.00 & 23.70  & 21.5  \\
+\multirow{4}{*}{\rotatebox{90}{889B}}   & VPP-1  & 5.76 & 0.00 & 10.30  & 8.40  \\
+                                        & VPP-4  & 6.45 & 0.00 & 21.30  & 17.60 \\
+                                        & VPP-10 & 7.85 & 0.00 & 20.95  & 16.30 \\
+                                        & Linux  & 6.14 & 0.00 & 23.70  & 21.50 \\
 \hline
-\multirow{4}{*}{\rotatebox{90}{1280B}}  & VPP-1  & 5.72 & 0.00 & 8.1    & 5.8   \\
-                                        & VPP-4  & 6.46 & 0.00 & 18.3   & 17.2  \\
-                                        & VPP-10 & 7.84 & 0.00 & 18.8   & 15.95 \\
+\multirow{4}{*}{\rotatebox{90}{1280B}}  & VPP-1  & 5.72 & 0.00 & 8.10   & 5.80  \\
+                                        & VPP-4  & 6.46 & 0.00 & 18.30  & 17.20 \\
+                                        & VPP-10 & 7.84 & 0.00 & 18.80  & 15.95 \\
                                         & Linux  & 6.11 & 0.00 & 9.95   & 3.80  \\
 \hline
-\multirow{4}{*}{\rotatebox{90}{1518B}}  & VPP-1  & 5.66 & 0.00 & 7.2    & 5.5   \\
-                                        & VPP-4  & 6.42 & 0.00 & 16.1   & 15.75 \\
-                                        & VPP-10 & 7.84 & 0.00 & 18.8   & 15.95 \\
+\multirow{4}{*}{\rotatebox{90}{1518B}}  & VPP-1  & 5.66 & 0.00 & 7.20   & 5.50  \\
+                                        & VPP-4  & 6.42 & 0.00 & 16.10  & 15.75 \\
+                                        & VPP-10 & 7.84 & 0.00 & 17.65  & 17.35 \\
                                         & Linux  & 6.10 & 0.00 & 12.25  & 10.55 \\
 \hline
 \end{tabular}
-\label{tab:1gbit_final_clean}
+\label{tab:one-way-1}
 \end{table}
 
+The energy efficiency of all configurations is shown in Fig.~\ref{fig:1g}. All VPP configurations maintained stable BPWh values, which is due to their busy-wait processing model.
+The Linux stack becomes more efficient with increasing frame size, likely as a result of less frequent system calls.
+As can be seen, even in the most favourable scenario, the Linux stack was not more energy-efficient than VPP-1, and when transmitting 64-byte frames, it was also less efficient than VPP-4.
 
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/consumption-1g.png}
+    \caption{Energy efficiency per delivered data in one-way 1\,Gbit/s.}
+    \label{fig:1g}
+\end{figure}
 
 
 %---------------------------------------------------------------------------------------------
 %---------------------------------------------------------------------------------------------
 %---------------------------------------------------------------------------------------------
 \subsubsection{10 Gbps Test Results}
+
+In the 10Gbit/s scenario, both VPP-1 and the Linux stack experienced significant difficulties delivering 64-byte frames, resulting in high packet loss and dramatically increased latency.
+In contrast, all other configurations handled the traffic without loss, and latency generally decreased with increasing frame size.
+A minor deviation from this trend was observed in the VPP-1 512-byte and VPP-4 64-byte frame tests, where latency temporarily increased with larger frame sizes before dropping again.
+This suggests that VPP configurations may deliver optimal latency when operating near their forwarding capacity.
+Interestingly, VPP-1 consistently achieved the lowest latency among all VPP variants, except in the 64-byte test.
+The Linux stack once again exhibited a latency increase when transitioning from 1280B to 1518B frames, as previously observed in the 1Gbit/s tests.
+The detailed statistics are shown in Fig.~\ref{tab:one-way-10}
 
 \begin{table}[h!]
 \centering
@@ -108,15 +133,13 @@ This scenario can simulate networks with asymmetric traffic patterns (e.g., a~we
                                         & Linux  & 6.51 & 0.00  & 61.75   & 65.80  \\
 \hline
 \end{tabular}
-\label{tab:10gbit_combined}
+\label{tab:one-way-10}
 \end{table}
 
-
-
-Figure~\ref{fig:10g} shows the energy efficiency of each configuration in this test in terms of delivered packets and bytes.
-The significant drop in performance for VPP-1 and Linux in 64-byte frames test is caused by large packet loss.
-When all packets are successfully delivered, all VPP configurations maintain stable BPWh values, which is due to their busy-wait processing model.
-The Linux stack, on the other hand, becomes more efficient with increasing frame size, likely as a result of less frequent system calls.
+Figure~\ref{fig:10g} illustrates the energy efficiency of each configuration in this test.
+The significant drop in performance for VPP-1 and Linux during the 64-byte frame test is attributed to high packet loss.
+When all packets are successfully delivered, all VPP configurations maintain stable BPWh values, as observed in the previous test.
+In contrast, the Linux stack showed a decline in performance across all frame sizes.
 
 \begin{figure}[!htbp]
     \centering
@@ -220,4 +243,10 @@ Compared to the previous test, the Linux stack performed significantly worse, wh
 \label{tab:40gbit_combined}
 \end{table}
 
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/consumption-40g.png}
+    \caption{Energy efficiency per delivered data in one-way 40\,Gbit/s.}
+    \label{fig:40g}
+\end{figure}
 
