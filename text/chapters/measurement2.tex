@@ -153,5 +153,45 @@ which may reveal bottlenecks or limitations not evident in unidirectional traffi
 
 \subsubsection{40 Gbps Test Results}
 
+\begin{table}[h!]
+\centering
+\caption{Results of bidirectional 40~Gbit/s tests}
+\begin{tabular}{|c|l|r|r|r|r|}
+\hline
+\textbf{} & \textbf{Config} & \textbf{Energy [Wh]} & \textbf{Pkt Loss [\%]} & \textbf{Avg Lat [$\mu$s]} & \textbf{Jitter [$\mu$s]} \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{64B}}    
+    & VPP-1  & 5.52 & 92.60 & 543.45 & 13.25 \\
+    & VPP-4  & 6.64 & 77.42 & 182.70 & 6.58  \\
+    & VPP-10 & 8.38 & 71.13 & 156.08 & 10.375 \\
+    & Linux  & 7.22 & 98.22 & 9256.2 & 1353.3 \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{512B}}   
+    & VPP-1  & 5.82 & 57.83 & 317.70 & 103.95 \\
+    & VPP-4  & 6.74 & 19.06 & 175.25 & 21.63 \\
+    & VPP-10 & 8.42 & 13.00 & 168.70 & 20.28 \\
+    & Linux  & 7.59 & 86.28 & 8976.75 & 924.63 \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{889B}}   
+    & VPP-1  & 5.84 & 37.21 & 215.45 & 47.30 \\
+    & VPP-4  & 6.89 & 1.29  & 142.7  & 17.2 \\
+    & VPP-10 & 8.43 & 0.00  & 52.48  & 15.38 \\
+    & Linux  & 7.64 & 76.43 & 17567.73 & 1555.53 \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1280B}}  
+    & VPP-1  & 5.89 & 18.32 & 179.13 & 36.65 \\
+    & VPP-4  & 6.86 & 0.00  & 54.68  & 18.28 \\
+    & VPP-10 & 8.39 & 0.00  & 49.63  & 17.40 \\
+    & Linux  & 7.48 & 64.37 & 16067.48 & 673.3 \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1518B}}  
+    & VPP-1  & 5.86 & 14.67 & 159.55 & 36.45 \\
+    & VPP-4  & 6.86 & 0.00  & 57.20  & 20.43 \\
+    & VPP-10 & 8.38 & 0.00  & 51.63  & 19.63 \\
+    & Linux  & 7.56 & 54.60 & 12835.1 & 588.1 \\
+\hline
+\end{tabular}
+\label{tab:bidirectional-40g}
+\end{table}
 
 
