@@ -20,7 +20,7 @@ In the tables, the number of worker threads is denoted as VPP-X, where X indicat
 
 To provide a baseline for comparison, all scenarios are also executed using the standard Linux kernel networking stack.
 It is configured with routing and interface parameters equivalent to the VPP setup, utilizing all 10 CPU cores on the NUMA node closest to the NICs.
-RPS is enabled, with affinities set evenly across the cores.
+Affinities are set evenly across the cores.
 This allows for a direct comparison between VPP and traditional kernel-based forwarding in terms of performance and energy efficiency.
 
 In order to cover common real-world deployment scenarios, three traffic patterns were evaluated: one-way forwarding, bi-directional (both-way) forwarding, and NAT with forwarding.
