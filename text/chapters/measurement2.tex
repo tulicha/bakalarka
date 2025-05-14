@@ -2,13 +2,25 @@
 
 In accordance with the recommendations of RFC~8219~\cite{RFC8219}, which -- although focused on IPv6 transition technologies -- 
 also defines general benchmarking principles, the same test scenarios were executed under bidirectional traffic conditions.  
-This configuration reflects a more realistic networking environment where traffic flows simultaneously in both directions, such as in point-to-point communications,a
- VPN tunnels, or client-server interactions involving both requests and responses.  
+This configuration reflects a more realistic networking environment where traffic flows simultaneously in both directions, such as in point-to-point communications,
+a VPN tunnels, or client-server interactions involving both requests and responses.  
 Unlike the one-way setup, bidirectional forwarding places a greater strain on system resources by utilizing both receive (RX) and transmit (TX) paths concurrently, 
 which may reveal bottlenecks or limitations not evident in unidirectional traffic scenarios.
+It is important to note that bidirectional tests generate traffic at a rate of \textit{X}\,Gbit/s in each direction, resulting in a total system load of \textit{2X}\,Gbit/s.
 
+%----------------------------------
 \subsubsection{1 Gbps Test Results}
 
+As shown in Table~\ref{tab:bidirectional-1g}, bidirectional forwarding at 1\,Gbit/s resulted in increased latency across all VPP configurations compared to unidirectional traffic. 
+VPP-4 and VPP-10 achieved latency levels similar to those observed in the 10\,Gbit/s unidirectional test, except for the 64-byte frame case, which remained closer to the 1\,Gbit/s results.
+Notably, VPP-1 performed significantly worse than in the unidirectional scenario, showing latency figures comparable to those seen in the 25\,Gbit/s unidirectional test. 
+This indicates that polling multiple interfaces negatively impacts latency performance in VPP.
+While VPP also polled both interfaces in the unidirectional tests, the secondary interface had no traffic, and was merely checked periodically. 
+In the bidirectional case, however, VPP had to process packet vectors from both NICs, which clearly introduced additional latency. 
+Since VPP processes packets in vectors from one interface at a time, traffic arriving on the second interface must wait until the current batch is completed. 
+This serial processing model contributes to increased latency under bidirectional load.
+Interestingly, the Linux network stack outperformed all VPP configurations when average or large frames were used, achieving the lowest latency in these scenarios. 
+By comparison, VPP delivered better results in the small frame tests, showcasing its capability to handle high-packet-rate workloads efficiently.
 
 \begin{table}[h!]
 \centering
@@ -51,12 +63,29 @@ which may reveal bottlenecks or limitations not evident in unidirectional traffi
 \label{tab:bidirectional-1g}
 \end{table}
 
+Figure~\ref{fig:bi-1g} shows that the results for PPWh and BPWh are similar to those of the one-way 1\,Gbit/s test, 
+although Linux exhibits slightly lower efficiency compared to VPP then was observed in one-way scenario.
+
+
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/consumption-bi-1g.png}
+    \caption{Energy efficiency per delivered data in bidirectional 1\,Gbit/s.}
+    \label{fig:bi-1g}
+\end{figure}
 
 %-----------------------------------
 %-----------------------------------
 %-----------------------------------
 \subsubsection{10 Gbps Test Results}
 
+The results of the 10\,Gbit/s bidirectional test, presented in Table~\ref{tab:bidirectional-10g}, are more comparable to the 25\,Gbit/s one-way test than to the 10\,Gbit/s one-way scenario, 
+indicating that serving an additional NIC had no negative impact on performance.  
+The only notable difference is that the VPP-1 configuration achieved better latency in one-way 25\,Gbit/s forwarding for medium and large frames, despite handling a higher total traffic load.  
+In the bidirectional test, with a total throughput of 20\,Gbit/s, all VPP configurations -- except in the 64-byte frame scenario -- 
+were able to handle the traffic successfully while maintaining stable latency.  
+By contrast, the Linux stack struggled to process the full traffic load. Even in cases where it managed to deliver all packets (i.e., with larger frames), it still exhibited significantly higher latency.
 
 \begin{table}[h!]
 \centering
@@ -98,6 +127,17 @@ which may reveal bottlenecks or limitations not evident in unidirectional traffi
 \end{tabular}
 \label{tab:bidirectional-10g}
 \end{table}
+
+The energy efficiency, in terms of BPWh and PPWh, is similar to that observed in the one-way 10\,Gbit/s and 25\,Gbit/s tests, with results being more closely aligned with the 25\,Gbit/s case.  
+Given the combined throughput of 20\,Gbit/s, this behavior was expected.  
+The corresponding results are visualized in Figure~\ref{fig:bi-10g}.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/consumption-bi-10g.png}
+    \caption{Energy efficiency per delivered data in bidirectional 10\,Gbit/s.}
+    \label{fig:bi-10g}
+\end{figure}
 
 %-----------------------------------
 %-----------------------------------
@@ -149,8 +189,18 @@ which may reveal bottlenecks or limitations not evident in unidirectional traffi
 
 
 
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/consumption-bi-25g.png}
+    \caption{Energy efficiency per delivered data in bidirectional 25\,Gbit/s.}
+    \label{fig:bi-25g}
+\end{figure}
 
 
+
+%-----------------------------------
+%-----------------------------------
+%-----------------------------------
 \subsubsection{40 Gbps Test Results}
 
 \begin{table}[h!]
@@ -194,4 +244,14 @@ which may reveal bottlenecks or limitations not evident in unidirectional traffi
 \label{tab:bidirectional-40g}
 \end{table}
 
+
+
+
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/consumption-bi-40g.png}
+    \caption{Energy efficiency per delivered data in bidirectional 40\,Gbit/s.}
+    \label{fig:bi-40g}
+\end{figure}
 

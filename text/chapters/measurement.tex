@@ -97,7 +97,7 @@ As can be seen, even in the most favourable scenario, the Linux stack was not mo
 %---------------------------------------------------------------------------------------------
 \subsubsection{10 Gbps Test Results}
 
-In the 10Gbit/s scenario, both VPP-1 and the Linux stack experienced significant difficulties delivering 64-byte frames, resulting in high packet loss and dramatically increased latency.
+In the 10\,Gbit/s scenario, both VPP-1 and the Linux stack experienced significant difficulties delivering 64-byte frames, resulting in high packet loss and dramatically increased latency.
 In contrast, all other configurations handled the traffic without loss, and latency generally decreased with increasing frame size.
 A minor deviation from this trend was observed in the VPP-1 512-byte and VPP-4 64-byte frame tests, where latency temporarily increased with larger frame sizes before dropping again.
 This suggests that VPP configurations may deliver optimal latency when operating near their forwarding capacity.
