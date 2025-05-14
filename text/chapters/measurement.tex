@@ -5,7 +5,8 @@ The fifth size, 889 bytes, was chosen based on real-world traffic analysis by Ju
 This selection covers the full range of standard Ethernet frame sizes, from the minimum to the maximum non-jumbo frames, 
 while also including a statistically representative average.
 
-All tests were conducted at four different transmission speeds -- 1, 10, 25, and 40 Gbit/s -- to evaluate the behavior of each configuration under varying network loads.
+All tests were conducted at four different transmission speeds -- 1, 10, 25, and 40 Gbit/s -- to evaluate the behavior of each configuration under varying network loads.  
+These transmission rates reflect standard Ethernet link speeds as defined in IEEE~802.3~\cite{802.3}.
 
 All traffic was generated using TRex with the example profile included in Appendix~\ref{appendix:trex-profile}.
 which ensures that each packet carries a varying source IP address to simulate multiple concurrent clients, while maintaining a single destination IP per direction.
