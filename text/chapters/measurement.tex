@@ -8,7 +8,7 @@ while also including a statistically representative average.
 All tests were conducted at four different transmission speeds -- 1, 10, 25, and 40 Gbit/s -- to evaluate the behavior of each configuration under varying network loads.  
 These transmission rates reflect standard Ethernet link speeds as defined in IEEE~802.3~\cite{802.3}.
 
-All traffic was generated using TRex with the example profile included in Appendix~\ref{appendix:trex-profile}.
+All traffic was generated using TRex with the profile included in Appendix~\ref{appendix:trex-profile}.
 which ensures that each packet carries a varying source IP address to simulate multiple concurrent clients, while maintaining a single destination IP per direction.
 Since the aim of this thesis is to evaluate the VPP architecture rather than specific features (e.g., routing table lookup or hashing mechanisms),
 the routing table of the DUT contains only two active forwarding entries corresponding to the test routes,

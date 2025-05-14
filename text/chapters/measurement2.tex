@@ -144,6 +144,13 @@ The corresponding results are visualized in Figure~\ref{fig:bi-10g}.
 %-----------------------------------
 \subsubsection{25 Gbps Test Results}
 
+As with the previous test, the results presented in Table~\ref{tab:bidirectional-25g} more closely resemble those of the one-way 40\,Gbit/s scenario.  
+Since Linux was unable to deliver all packets in that test, it is not surprising that even more packets were dropped in this case.  
+Interestingly, in all VPP configurations where packet loss occurred, the percentage of dropped packets was slightly lower compared to the one-way 40\,Gbit/s test, 
+despite the higher total throughput of 50\,Gbi/s.  
+One possible explanation is that bidirectional forwarding leads to more balanced utilization of RX queues across multiple cores.  
+Moreover, in scenarios without packet loss, VPP maintained stable latency values -- although increased compared to the previous 10\,Gbit/s bidirectional experiment.
+
 \begin{table}[h!]
 \centering
 \caption{Results of bidirectional 25~Gbit/s tests}
@@ -154,7 +161,7 @@ The corresponding results are visualized in Figure~\ref{fig:bi-10g}.
 \multirow{4}{*}{\rotatebox{90}{64B}}    
     & VPP-1  & 5.54 & 88.16 & 545.50 & 12.30 \\
     & VPP-4  & 6.60 & 64.58 & 185.08 & 8.18  \\
-    & VPP-10 & 8.40 & 42.05 & 450.63 & 12.55 \\
+    & VPP-10 & 8.40 & 42.05 & 159.55 & 12.55 \\
     & Linux  & 7.23 & 97.09 & 9266.88 & 1409.90 \\
 \hline
 \multirow{4}{*}{\rotatebox{90}{512B}}   
@@ -185,9 +192,9 @@ The corresponding results are visualized in Figure~\ref{fig:bi-10g}.
 \label{tab:bidirectional-25g}
 \end{table}
 
-
-
-
+Concerning energy efficiency, it is worth noting that the Linux network stack remained the least energy-efficient across all frame sizes, primarily due to the high packet loss.  
+The results closely resemble those observed in the one-way 40\,Gbit/s test.  
+A graph visualizing these results is shown in Figure~\ref{fig:bi-25g}.
 
 \begin{figure}[!htbp]
     \centering
@@ -202,6 +209,13 @@ The corresponding results are visualized in Figure~\ref{fig:bi-10g}.
 %-----------------------------------
 %-----------------------------------
 \subsubsection{40 Gbps Test Results}
+
+This final and most demanding test, with a total bidirectional throughput of 80\,Gbit/s, clearly demonstrates the scalability of VPP compared to the Linux network stack.  
+In every frame size scenario, Linux dropped more than half of all packets, confirming its limited capability to handle high-throughput workloads.  
+VPP, on the other hand, managed to process a substantial portion of the traffic even in the smallest frame sizes, 
+and at higher configurations (VPP-4 and VPP-10) was able to eliminate packet loss entirely for medium and large frames.  
+These results further underline the advantages of user-space packet processing under extreme conditions.
+The results are summarised in Table~\ref{tab:bidirectional-40g}.
 
 \begin{table}[h!]
 \centering
@@ -244,9 +258,8 @@ The corresponding results are visualized in Figure~\ref{fig:bi-10g}.
 \label{tab:bidirectional-40g}
 \end{table}
 
-
-
-
+As shown in the energy efficiency graph in Figure~\ref{fig:bi-40g}, Linux clearly remains the least energy-efficient configuration.  
+Due to high packet loss, the energy efficiency of VPP-1 also declined, falling below that of VPP-4.
 
 \begin{figure}[!htbp]
     \centering
