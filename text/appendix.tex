@@ -1,4 +1,53 @@
-\chapter{Nějaká příloha}
+\chapter{TRex Measurement Profile}
+\label{appendix:trex-profile}
 
+This appendix contains the profile used by the TRex traffic generator during all performance tests presented in this thesis.  
+The profile defines two streams. The first, called \textit{heavy}, represents the main traffic stream with varying frame sizes.  
+Its source IP address is incremented to generate distinct packets, simulating a more realistic traffic pattern.  
+The second stream, named \textit{latency}, is used for latency measurements. It uses 64-byte frames and static IP addresses, and its transmission rate is set to 5000 packets per second.  
+In bidirectional scenarios, a mirrored version of this profile was deployed on the second interface to generate traffic in the opposite direction, using a distinct \texttt{pg\_id} to enable independent latency measurement.
 
-Sem přijde to, co nepatří do hlavní části.
+\begin{lstlisting}[caption={TRex Measurement Profile Example}]
+from trex_stl_lib.api import *
+
+class STLS1(object):
+    def __init__(self):
+        self.fsize = [FRAME_SIZE] # Frame size for the main traffic stream (e.g., 64, 512... bytes)
+        self.latency_fsize = 64 # Frame size for latency stream
+        self.cache_size = [CACHE_SIZE] # Max number of unique source IPs set in STLVmFlowVar (precomputed if set); can be 'None'
+
+    def create_heavy_stream(self):
+        size = self.fsize - 4 # FCS
+        base_pkt = Ether()/IP(src='16.0.0.1', dst='48.0.0.1')/UDP(dport=12, sport=1025)
+        pad = max(0, size - len(base_pkt)) * 'x'
+
+        vm = STLScVmRaw([
+            STLVmFlowVar("ip_src", min_value="10.0.0.1", max_value="10.255.255.255", size=4, step=1, op="inc"),
+            STLVmWrFlowVar(fv_name="ip_src", pkt_offset="IP.src"),
+            STLVmFixIpv4(offset="IP")
+        ], cache_size=self.cache_size)
+
+        pkt = STLPktBuilder(pkt=base_pkt/pad, vm=vm)
+
+        return STLStream(packet=pkt, mode=STLTXCont())
+
+    def create_latency_stream(self):
+        size = self.latency_fsize - 4 # FCS
+        pkt = Ether()/IP(src="16.0.0.1", dst="48.0.0.1")/UDP(dport=1234, sport=1234)
+        pad = max(0, size - len(pkt)) * 'x'
+        pkt = STLPktBuilder(pkt=pkt/pad)
+
+        return STLStream(
+            packet=pkt,
+            mode=STLTXCont(pps=5000), # Packet rate for latency stream
+            flow_stats=STLFlowLatencyStats(pg_id=7) # Stream ID for latency statistics
+        )
+
+    def get_streams(self):
+        return [self.create_heavy_stream(), self.create_latency_stream()]
+
+def register():
+    return STLS1()
+
+\end{lstlisting}
+
