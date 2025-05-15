@@ -1,4 +1,19 @@
 \subsection{NAT}
+Network Address Translation (NAT) is a commonly used technique among small to mid-sized ISPs for conserving public IP addresses and managing internal networks. 
+Although NAT is a standard practice, it introduces additional complexity into packet forwarding.
+Specifically, NAT requires the router to maintain stateful information for each active connection. 
+For every translated flow, the router must store the original and translated source IP addresses and ports, along with the destination address and protocol type. 
+This information is necessary to correctly map incoming response packets back to the appropriate internal hosts.
+Since NAT modifies headers -- such as the source IP addresses and source ports -- all affected checksums must be recalculated, which imposes further computational overhead.
+The goal of this test is to evaluate how NAT impacts overall system performance.
+
+For this purpose, source NAT is applied on top of the one-way forwarding scenario, meaning that the test setup is identical to the basic forwarding case, but with NAT translation enabled at the DUT. 
+A /16 source IP address pool is used to emulate a large number of concurrent clients, while the Device Under Test (DUT) has a /24 pool of inside global IP addresses available for translation. 
+This configuration serves as a stress test for the NAT implementation and its capacity to manage many concurrent state entries.
+
+A one-way traffic pattern is used to isolate the performance impact of NAT translations without interference from return traffic, 
+as response packets would be subject to the same translation and state tracking processes, merely in the opposite direction.
+
 
 %----------------------------------
 %----------------------------------

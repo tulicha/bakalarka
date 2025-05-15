@@ -10,6 +10,7 @@ These transmission rates reflect standard Ethernet link speeds as defined in IEE
 
 All traffic was generated using TRex with the profile included in Appendix~\ref{appendix:trex-profile}.
 which ensures that each packet carries a varying source IP address to simulate multiple concurrent clients, while maintaining a single destination IP per direction.
+In all forwarding scenarios, a /24 source IP pool was used, while a /16 pool was employed in NAT scenarios to simulate a higher number of concurrent clients.
 Since the aim of this thesis is to evaluate the VPP architecture rather than specific features (e.g., routing table lookup or hashing mechanisms),
 the routing table of the DUT contains only two active forwarding entries corresponding to the test routes,
 along with two administrative entries used for management purposes.

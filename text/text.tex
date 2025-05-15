@@ -90,7 +90,7 @@ The Practical part describes the testing infrastructure, presents the results of
 
 
 \chapter{Conclusion and Future work}
-The main objective of this thesis was to analyze and compare the performance, latency, and energy efficiency of different VPP configurations with a traditional Linux-based router. 
+The objective of this thesis was to analyze and compare the performance, latency, and energy efficiency of different VPP configurations with a traditional Linux-based router. 
 The work aimed to explore the theoretical advantages of VPP, design and implement a custom measurement infrastructure, define relevant traffic scenarios, 
 and determine the conditions under which VPP outperforms the Linux network stack.
 
@@ -102,14 +102,13 @@ Using this setup, a total of 4800 measurements, reflecting realistic usage condi
 were conducted across 60 different test scenarios using four configurations -- three VPP variants and one Linux-based reference system.
 This resulted in 240 distinct test cases, providing a robust dataset for evaluating throughput, latency, and energy efficiency under a variety of traffic conditions.
 
-The results show that VPP consistently outperformed the Linux-based reference system in terms of throughput and latency -- with the exception of low-traffic forwarding scenarios with higher frame sizes, 
-where the Linux stack achieved slightly better results. 
-However, these differences were relatively minor. 
-In terms of energy efficiency, the Linux-based reference system was generally more efficient than all VPP configurations, with the exception of VPP-1, which outperformed Linux in all cases.
-VPP also demonstrated more stable performance.
-Given VPP’s overall higher performance ceiling, it is reasonable to expect that it would handle sudden traffic spikes more effectively and with greater stability compared to the Linux-based solution. 
-The results also clearly indicate that VPP would be more resilient under DoS or DDoS-style attack conditions.
 
+The results show that VPP consistently outperformed the Linux-based reference system in terms of throughput and latency -- with the exception of low-traffic forwarding scenarios involving larger frame sizes, 
+where the Linux stack achieved slightly better results. However, these differences were relatively minor.
+The Linux-based reference system was more energy-efficient than all VPP configurations only under light traffic conditions -- and with the exception of VPP with a single worker thread.
+VPP, however, demonstrated more consistent performance in terms of throughput and latency across all traffic conditions.
+Given VPP’s generally higher performance ceiling, it is reasonable to expect it would handle sudden traffic spikes more effectively and with greater consistency than the Linux-based solution. 
+The results also clearly indicate that VPP would be more resilient under DoS or DDoS-style attack conditions.
 
 Several directions for future work remain open. For small-to-mid-sized ISPs, it would be useful to compare VPP not only with the Linux network stack, but 
 also with commercial or legacy routers commonly used in practice. 
