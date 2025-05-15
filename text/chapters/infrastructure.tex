@@ -18,6 +18,11 @@ The DUT is responsible for processing network traffic and responding to the test
 Additionally, the electrical power consumption of the DUT is monitored and measured during the tests to assess its energy efficiency under varying loads.
 The hardware of DUT is shown in table \ref{tab:hardware_dut}.
 
+%This template is horrible and broken!
+\newpage
+The Tester (Measurement Device), on the other hand, is responsible in generating the network traffic and capturing the responses from the DUT.
+Its physical features are shown in table \ref{tab:hardware_tester}. 
+
 \begin{table}[h!]
 \centering
 \caption{Hardware details for DUT (Device Under Test)}
@@ -29,18 +34,16 @@ The hardware of DUT is shown in table \ref{tab:hardware_dut}.
 \hline
 \textbf{Frequency} & 2.60GHz \\
 \hline
-\textbf{Cores} & 10 physical cores each (one thread per core) \\
+\textbf{Cores} & 10 physical cores each (1 thread/core) \\
 \hline
 \textbf{Memory (RAM)} & TODO! Size, type, speed \\
 \hline
-\textbf{Network Interface Cards (NIC)} & Mellanox ConnectX-6 Dx (Dual-port) \\
+\textbf{NIC} & Mellanox ConnectX-6 Dx (Dual-port) \\
 \hline
 \end{tabular}
 \label{tab:hardware_dut}
 \end{table}
 
-The Tester (Measurement Device), on the other hand, is responsible in generating the network traffic and capturing the responses from the DUT.
-Its physical features are shown in table \ref{tab:hardware_tester}. 
 
 \begin{table}[h!]
 \centering
@@ -53,11 +56,11 @@ Its physical features are shown in table \ref{tab:hardware_tester}.
 \hline
 \textbf{Frequency} & 3.00GHz \\
 \hline
-\textbf{Cores} & 12 physical cores each (two threads per core)\\
+\textbf{Cores} & 12 physical cores each (2 threads/core)\\
 \hline
 \textbf{Memory (RAM)} & TODO! Size, type, speed \\
 \hline
-\textbf{Network Interface Cards (NIC)} & 2x Mellanox ConnectX-5 \\
+\textbf{NIC} & 2x Mellanox ConnectX-5 \\
 \hline
 \end{tabular}
 \label{tab:hardware_tester}

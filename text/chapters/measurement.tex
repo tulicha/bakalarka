@@ -31,7 +31,7 @@ NAT is a commonly used feature in smaller ISP deployments. As it is a computatio
 \subsection{One-way forwarding}
 
 These tests were conducted in a one-way configuration, as suggested by RFC~2544~\cite{rfc2544}.
-Such a setup can represent asymmetric traffic patterns commonly found in real-world scenarios -- for example, downstream-heavy services like web servers or video streaming platforms.
+Such setup can represent asymmetric traffic patterns commonly found in real-world scenarios -- for example, downstream-heavy services like web servers or video streaming platforms.
 It can also emulate high-load conditions similar to those observed during denial-of-service (DoS) attacks, where a large volume of traffic targets a single destination. 
 
 %----------------------------------
@@ -104,7 +104,7 @@ A minor deviation from this trend was observed in the VPP-1 512-byte and VPP-4 6
 This suggests that VPP configurations may deliver optimal latency when operating near their forwarding capacity.
 Interestingly, VPP-1 consistently achieved the lowest latency among all VPP variants, except in the 64-byte test.
 The Linux stack once again exhibited a latency increase when transitioning from 1280B to 1518B frames, as previously observed in the 1Gbit/s tests.
-The detailed statistics are shown in Fig.~\ref{tab:one-way-10}
+The detailed statistics are shown in Tab.~\ref{tab:one-way-10}
 
 \begin{table}[h!]
 \centering
