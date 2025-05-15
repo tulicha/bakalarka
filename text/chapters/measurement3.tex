@@ -1,7 +1,220 @@
 \subsection{NAT}
 
+%----------------------------------
+%----------------------------------
+%----------------------------------
 \subsubsection{1 Gbps Test Results}
+
+\begin{table}[h!]
+\centering
+\caption{Results of NAT 1~Gbit/s tests}
+\begin{tabular}{|c|l|r|r|r|r|}
+\hline
+\textbf{} & \textbf{Config} & \textbf{Energy [Wh]} & \textbf{Pkt Loss [\%]} & \textbf{Avg Lat [$\mu$s]} & \textbf{Jitter [$\mu$s]} \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{64B}} &
+          VPP-1  & 5.67  &  1.56 & 19.10 & 11.65 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{512B}} &
+          VPP-1  & 5.76  &  1.53 & 12.25 & 12.25 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{889B}} &
+          VPP-1  & 5.74  & 1.50  & 10.3  & 7.45  \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1280B}} &
+          VPP-1  & 5.73  & 1.48  & 7.70  &  7.30 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1518B}} &
+          VPP-1  & 5.68  & 1.47  & 7.3   & 5.55  \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\end{tabular}
+\label{tab:nat-1g}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%----------------------------------
+%----------------------------------
+%----------------------------------
 \subsubsection{10 Gbps Test Results}
+
+\begin{table}[h!]
+\centering
+\caption{Results of NAT 10~Gbit/s tests}
+\begin{tabular}{|c|l|r|r|r|r|}
+\hline
+\textbf{} & \textbf{Config} & \textbf{Energy [Wh]} & \textbf{Pkt Loss [\%]} & \textbf{Avg Lat [$\mu$s]} & \textbf{Jitter [$\mu$s]} \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{64B}} &
+          VPP-1  & 5.75  & 75.12 & 259.15& 11.95 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{512B}} &
+          VPP-1  & 5.56  & 1.56  & 31.15 & 16.9  \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{889B}} &
+          VPP-1  & 5.57  & 1.56  & 29.8  & 18.55 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1280B}} &
+          VPP-1  & 5.66  & 1.55  & 26.65 & 18.1  \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1518B}} &
+          VPP-1  & 5.64  & 1.55  &  26.10 & 18.2   \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\end{tabular}
+\label{tab:nat-10g}
+\end{table}
+
+
+
+
+
+
+
+%----------------------------------
+%----------------------------------
+%----------------------------------
 \subsubsection{25 Gbps Test Results}
+
+
+\begin{table}[h!]
+\centering
+\caption{Results of NAT 25~Gbit/s tests}
+\begin{tabular}{|c|l|r|r|r|r|}
+\hline
+\textbf{} & \textbf{Config} & \textbf{Energy [Wh]} & \textbf{Pkt Loss [\%]} & \textbf{Avg Lat [$\mu$s]} & \textbf{Jitter [$\mu$s]} \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{64B}} &
+          VPP-1  & 5.73  & 90.19 & 459.65 & 17.8 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{512B}} &
+          VPP-1  & 5.70  & 23.82 & 256.05 & 23.55 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{889B}} &
+          VPP-1  & 5.63  & 1.57  & 44.1  & 30.15 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1280B}} &
+          VPP-1  & 5.70  & 1.56  & 35.1  & 15.95 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1518B}} &
+          VPP-1  &  5.81 &  1.56 & 31.2  & 14.4  \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\end{tabular}
+\label{tab:nat-25g}
+\end{table}
+
+
+
+
+
+
+%----------------------------------
+%----------------------------------
+%----------------------------------
 \subsubsection{40 Gbps Test Results}
+
+
+\begin{table}[h!]
+\centering
+\caption{Results of NAT 40~Gbit/s tests}
+\begin{tabular}{|c|l|r|r|r|r|}
+\hline
+\textbf{} & \textbf{Config} & \textbf{Energy [Wh]} & \textbf{Pkt Loss [\%]} & \textbf{Avg Lat [$\mu$s]} & \textbf{Jitter [$\mu$s]} \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{64B}} &
+          VPP-1  & 5.78  & 93.89 & 447.95 & 16.6 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{512B}} &
+          VPP-1  & 5.79  & 52.02 & 264.75 & 18.45  \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{889B}} &
+          VPP-1  &  5.82 & 21.93 & 324.95 & 33.5 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1280B}} &
+          VPP-1  & 5.85  & 1.61  & 71.2  & 24.95 \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\multirow{4}{*}{\rotatebox{90}{1518B}} &
+          VPP-1  & 5.86  & 1.57  & 48.65 & 26.9  \\
+        & VPP-4  &       &       &       &       \\
+        & VPP-10 &       &       &       &       \\
+        & Linux  &       &       &       &       \\
+\hline
+\end{tabular}
+\label{tab:nat-40g}
+\end{table}
 
