@@ -21,9 +21,11 @@ where general-purpose systems replaced proprietary platforms, enabling broader i
 
 Since VPP was open-sourced only recently, it has not yet been widely adopted by the market, and there are only a limited number of academic studies on the subject. As a result, this area remains underexplored. 
 This thesis aims to contribute to this field by evaluating VPP's\footnote{The abbreviation VPP is also commonly used in academic literature to refer to a Virtual Power Plant.} performance, 
-with a particular focus on its electricity consumption. 
-The findings could provide valuable insights for the industry and guide future research, especially in light of the increasing importance of energy efficiency, 
-as highlighted in recent forecasts by ČEPS a.s. regarding the future of energy resources in the Czech Republic.
+with a focus on comparing throughput, latency, and energy efficiency across different VPP configurations and a reference Linux-based router under various traffic conditions.
+The goal is to understand the theoretical advantages of VPP, design and implement a suitable measurement infrastructure, define representative traffic scenarios, 
+and ultimately evaluate whether VPP provides superior performance. The aim is also to characterize the specific conditions and configurations under which it outperforms the Linux-based reference system.
+The results may support a recommendation for its deployment by small-to-mid-sized ISPs currently using Linux-based routers or planning to upgrade legacy systems.
+Moreover, in light of the increasing focus on energy efficiency in IT infrastructure, the results may also inform ongoing discussions about sustainable network architecture.
 
 With the development of AI and the growing demand for high-resolution streaming services, it is highly likely that the demand for internet bandwidth will continue to rise. 
 This will result in an increased need for network equipment capable of processing larger volumes of data more efficiently. 
@@ -73,7 +75,7 @@ The Practical part describes the testing infrastructure, presents the results of
 \input{text/chapters/metodology.tex}
 
 %---------------------------------------------------------------
-\section{Test Scenarios \& Results}
+\section{Test Scenarios and Results}
 %---------------------------------------------------------------
 \input{text/chapters/measurement.tex}
 \input{text/chapters/measurement2.tex}
@@ -86,6 +88,29 @@ The Practical part describes the testing infrastructure, presents the results of
 %---------------------------------------------------------------
 
 
-\chapter{Conclusion}
+\chapter{Conclusion and Future work}
+The main objective of this thesis was to analyze and compare the performance, latency, and energy efficiency of different VPP configurations with a traditional Linux-based router. 
+The work aimed to explore the theoretical advantages of VPP, design and implement a custom measurement infrastructure, define relevant traffic scenarios, 
+and determine the conditions under which VPP outperforms the Linux network stack.
+
+The theoretical part of the thesis provided a detailed explanation of VPP's architecture and operating principles. 
+It also included a comparative analysis of packet processing between VPP and the traditional Linux network stack, highlighting the key differences in design, performance potential, and resource utilization.
+
+As part of the practical work, a custom measurement infrastructure was designed and implemented to enable reliable and repeatable testing. 
+Using this setup, a total of 4800 measurements, reflecting realistic usage conditions on standard COTS hardware, 
+were conducted across 60 different test scenarios using four configurations -- three VPP variants and one Linux-based reference system.
+This resulted in 240 distinct test cases, providing a robust dataset for evaluating throughput, latency, and energy efficiency under a variety of traffic conditions.
+
+The results show that VPP consistently outperformed the Linux-based reference system in terms of throughput and latency -- with the exception of low-traffic forwarding scenarios with higher frame sizes, 
+where the Linux stack achieved slightly better results. 
+However, these differences were relatively minor. 
+In terms of energy efficiency, the Linux-based reference system was generally more efficient than all VPP configurations, with the exception of VPP-1, which outperformed Linux in all cases.
+VPP also demonstrated more stable performance.
+Given VPP’s overall higher performance ceiling, it is reasonable to expect that it would handle sudden traffic spikes more effectively and with greater stability compared to the Linux-based solution. 
+The results also clearly indicate that VPP would be more resilient under DoS or DDoS-style attack conditions.
 
 
+Several directions for future work remain open. For small-to-mid-sized ISPs, it would be useful to compare VPP not only with the Linux network stack, but 
+also with commercial or legacy routers commonly used in practice. 
+It would also be valuable to evaluate the impact of advanced features such as Quality of Service (QoS), firewalling, or traffic shaping. 
+Finally, comparing VPP with a custom-tuned Linux kernel optimized for networking could provide deeper insight into the limits of traditional software-based routing.
