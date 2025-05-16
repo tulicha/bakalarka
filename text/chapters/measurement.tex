@@ -8,7 +8,7 @@ while also including a statistically representative average.
 All tests were conducted at four different transmission speeds -- 1, 10, 25, and 40 Gbit/s -- to evaluate the behavior of each configuration under varying network loads.  
 These transmission rates reflect standard Ethernet link speeds as defined in IEEE~802.3~\cite{802.3}.
 
-All traffic was generated using TRex with the profile included in Appendix~\ref{appendix:trex-profile}.
+All traffic was generated using TRex with the profile included in Appendix~\ref{appendix:trex-profile},
 which ensures that each packet carries a varying source IP address to simulate multiple concurrent clients, while maintaining a single destination IP per direction.
 In all forwarding scenarios, a /24 source IP pool was used, while a /16 pool was employed in NAT scenarios to simulate a higher number of concurrent clients.
 Since the aim of this thesis is to evaluate the VPP architecture rather than specific features (e.g., routing table lookup or hashing mechanisms),
@@ -24,6 +24,7 @@ To provide a baseline for comparison, all scenarios are also executed using the 
 It is configured with routing and interface parameters equivalent to the VPP setup, utilizing all 10 CPU cores on the NUMA node closest to the NICs.
 Affinities are set evenly across the cores.
 This allows for a direct comparison between VPP and traditional kernel-based forwarding in terms of performance and energy efficiency.
+All CPU cores used for testing (including VPP scenarios) are set to performance mode, as is standard practice in network workloads.
 
 In order to cover common real-world deployment scenarios, three traffic patterns were evaluated: one-way forwarding, bi-directional (both-way) forwarding, and NAT with forwarding.
 These scenarios represent typical use cases encountered in small to medium-sized ISP or enterprise environments, where Linux or VPP may be deployed as the primary software-based router.
@@ -44,7 +45,9 @@ In terms of latency, the Linux configuration outperformed both VPP-4 and VPP-10 
 However, latency in the Linux setup increased when switching from 1280B to 1518B frames, which can likely be attributed to internal kernel memory copying and buffer processing.
 In contrast, all VPP configurations either maintained or slightly reduced latency with increasing frame size, demonstrating better scalability.
 Interestingly, the single-threaded VPP-1 configuration achieved the lowest latency among all VPP variants.
-This can likely be attributed to the absence of L3 cache trashing. In low-demand scenarios, multithreading may become a disadvantage rather than a benefit.
+This can likely be attributed to the absence of L3 cache thrashing and the ability to process more packets in a single batch, which amortizes the per-packet processing cost -- unlike parallelized VPP, 
+which must traverse the processing graph with fewer packets per vector.
+In low-demand scenarios, multithreading may become a disadvantage rather than an advantage.
 
 \begin{table}[h!]
 \centering
@@ -103,7 +106,7 @@ In the 10\,Gbit/s scenario, both VPP-1 and the Linux stack experienced significa
 In contrast, all other configurations handled the traffic without loss, and latency generally decreased with increasing frame size.
 A minor deviation from this trend was observed in the VPP-1 512-byte and VPP-4 64-byte frame tests, where latency temporarily increased with larger frame sizes before dropping again.
 This suggests that VPP configurations may deliver optimal latency when operating near their forwarding capacity.
-Interestingly, VPP-1 consistently achieved the lowest latency among all VPP variants, except in the 64-byte test.
+As observed before, VPP-1 consistently achieved the lowest latency among all VPP variants, except in the 64-byte test.
 The Linux stack once again exhibited a latency increase when transitioning from 1280B to 1518B frames, as previously observed in the 1Gbit/s tests.
 The detailed statistics are shown in Tab.~\ref{tab:one-way-10}
 
@@ -167,7 +170,6 @@ It can be observed that increasing the frame size beyond 889 bytes had no measur
 In contrast, the Linux stack benefited from larger frames, and the increase in latency in prevoius test seen in the 1518-byte scenario compared to the 1280-byte scenario 
 did not occur at this higher transmission rate.
 An interesting observation is that when VPP drops packets, the ones that are not dropped tend to be delivered with significantly lower latency.
-This is likely due to newer packets overwriting older ones in the NIC’s RX ring buffers.
 
 \begin{table}[h!]
 \centering
@@ -225,8 +227,9 @@ As shown in Table~\ref{tab:one-way-40}, the 64-byte frame test resulted in even 
 However, the latency statistics for VPP remained comparable to those observed earlier, despite the increased loss.
 In this test, the Linux stack failed to deliver all data across all frame sizes, which again led to consistently high latency.
 When no data were dropped, all VPP configurations performed similarly, maintaining low and stable latency.
-These results clearly highlight the advantage of VPP over the traditional Linux network stack under heavy traffic loads.
-Notably, even the least resource-intensive VPP configuration (VPP-1) significantly outperformed the Linux stack in both latency and reliability, demonstrating VPP’s efficiency even with minimal parallelism.
+These results clearly highlight the advantage of VPP over the Linux network stack under heavy traffic loads.
+Notably, even the least resource-intensive VPP configuration (VPP-1) significantly outperformed the Linux stack in both latency and reliability, 
+demonstrating VPP’s efficiency even with minimal parallelism.\looseness=1
 
 \begin{table}[h!]
 \centering

@@ -1,3 +1,5 @@
+%I hate this template
+\newpage
 \subsection{NAT}
 Network Address Translation (NAT) is a commonly used technique among small to mid-sized ISPs for conserving public IP addresses and managing internal networks. 
 Although NAT is a standard practice, it introduces additional complexity into packet forwarding.
@@ -8,7 +10,7 @@ Since NAT modifies headers -- such as the source IP addresses and source ports -
 The goal of this test is to evaluate how NAT impacts overall system performance.
 
 For this purpose, source NAT is applied on top of the one-way forwarding scenario, meaning that the test setup is identical to the basic forwarding case, but with NAT translation enabled at the DUT. 
-A /16 source IP address pool is used to emulate a large number of concurrent clients, while the Device Under Test (DUT) has a /24 pool of inside global IP addresses available for translation. 
+A /16 source IP address pool is used to emulate a large number of concurrent clients, while the DUT has a /24 pool of inside global IP addresses available for translation. 
 This configuration serves as a stress test for the NAT implementation and its capacity to manage many concurrent state entries.
 NAT was implemented using \textit{nftables} in Linux, and the \textit{nat\_plugin} in VPP.
 
@@ -38,7 +40,7 @@ The slightly better results of Linux with NAT compared to plain forwarding may b
 \multirow{4}{*}{\rotatebox{90}{64B}} &
           VPP-1  & 5.67  & 1.56  & 19.10 & 11.65 \\
         & VPP-4  & 6.37  & 1.56  & 35.75 & 16.35 \\
-        & VPP-10 & TODO? &       &       &       \\
+        & VPP-10 & 7.98  & 1.56  & 31.60 & 15.20  \\
         & Linux  & 6.61  & 4.43  & 303.25 & 182.85 \\
 \hline
 \multirow{4}{*}{\rotatebox{90}{512B}} &
@@ -56,19 +58,27 @@ The slightly better results of Linux with NAT compared to plain forwarding may b
 \multirow{4}{*}{\rotatebox{90}{1280B}} &
           VPP-1  & 5.73  & 1.48  & 7.70  &  7.30 \\
         & VPP-4  & 6.35  & 1.48  & 18.45 & 15.45 \\
-        & VPP-10 & TODO? &       &       &       \\
-        & Linux  & 6.07  & 0.00  & 11.4  & 1.3   \\
+        & VPP-10 & 7.75  & 1.48  & 19.10 & 16.45    \\
+        & Linux  & 6.07  & 0.00  & 11.40  & 1.30   \\
 \hline
 \multirow{4}{*}{\rotatebox{90}{1518B}} &
           VPP-1  & 5.68  & 1.47  & 7.30  & 5.55  \\
-        & VPP-4  & 6.35  & 1.47  & 17.55 & 16.5  \\
-        & VPP-10 & TODO? &       &       &       \\
+        & VPP-4  & 6.35  & 1.47  & 17.55 & 16.50  \\
+        & VPP-10 & 7.86  & 1.47  & 17.5  & 15.85 \\
         & Linux  & 6.05  & 0.00  & 10.55 & 6.60  \\
 \hline
 \end{tabular}
 \label{tab:nat-1g}
 \end{table}
 
+The energy efficiency graph shown in Fig.~\ref{fig:nat-1g} demonstrates results similar to those observed in plain one-way 1\,Gbps forwarding.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/consumption-nat-1g.png}
+    \caption{Energy efficiency per delivered data in NAT 1\,Gbit/s.}
+    \label{fig:nat-1g}
+\end{figure}
 
 %----------------------------------
 %----------------------------------
@@ -123,7 +133,7 @@ In this test, VPP's superior packet processing efficiency compared to Linux beco
 \label{tab:nat-10g}
 \end{table}
 
-The energy efficiency graph shown in Fig.~\ref{fig:nat-10g} demonstrates results similar to those observed in plain one-way 10\,Gbps forwarding.
+The energy efficiency graph shown in Fig.~\ref{fig:nat-10g} demonstrates -- as observed in the previous test -- results resembling those of plain one-way 10\,Gbps forwarding.
 
 \begin{figure}[!htbp]
     \centering
@@ -151,7 +161,7 @@ Overall, this test further demonstrates VPP's ability to handle high-throughput 
 \hline
 \multirow{4}{*}{\rotatebox{90}{64B}} &
           VPP-1  & 5.73  & 90.19 & 459.65 & 17.80 \\
-        & VPP-4  & TODO? &       &       &        \\
+        & VPP-4  & 6.39  & 80.63 & 836.1  & 58.95 \\
         & VPP-10 & 7.95  & 59.86 & 851.35 & 57.60 \\
         & Linux  & 7.26  & 93.62 & 8398.85 & 1636.1 \\
 \hline
@@ -174,15 +184,23 @@ Overall, this test further demonstrates VPP's ability to handle high-throughput 
         & Linux  & 6.92  & 12.54 & 262.25 & 204.50  \\
 \hline
 \multirow{4}{*}{\rotatebox{90}{1518B}} &
-          VPP-1  &  5.81 &  1.56 & 31.20 & 14.40 \\
-        & VPP-4  &  6.63 & 1.56  & 40.65 & 22.50 \\
-        & VPP-10 &  8.03 & 1.56  & 34.40 & 18.45 \\
-        & Linux  &  TBD   &       &       &       \\
+          VPP-1  & 5.81 & 1.56  & 31.20 & 14.40 \\
+        & VPP-4  & 6.63 & 1.56  & 40.65 & 22.50 \\
+        & VPP-10 & 8.03 & 1.56  & 34.40 & 18.45 \\
+        & Linux  & 6.82 & 2.25  & 282.15 & 175.4  \\
 \hline
 \end{tabular}
 \label{tab:nat-25g}
 \end{table}
 
+The energy efficiency graph shown in Fig.~\ref{fig:nat-25g} demonstrates results similar to those observed in plain one-way 25\,Gbps forwarding.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/consumption-nat-25g.png}
+    \caption{Energy efficiency per delivered data in NAT 25\,Gbit/s.}
+    \label{fig:nat-25g}
+\end{figure}
 
 
 
@@ -193,6 +211,8 @@ Overall, this test further demonstrates VPP's ability to handle high-throughput 
 %----------------------------------
 \subsubsection{40 Gbps Test Results}
 
+The results of the most extreme NAT test presented in Table \ref{tab:nat-40g} continue the trend observed in the previous test.
+In scenarios where VPP handled almost the full processing of traffic, the average latency in some cases nearly doubled compared to pure forwarding in the 40 Gbit/s test.
 
 \begin{table}[h!]
 \centering
@@ -205,33 +225,43 @@ Overall, this test further demonstrates VPP's ability to handle high-throughput 
           VPP-1  & 5.78  & 93.89 & 447.95 & 16.60 \\
         & VPP-4  & 6.41  & 87.59 & 830.80 & 44.80 \\
         & VPP-10 & 7.98  & 74.47 & 860.45 & 55.85 \\
-        & Linux  &       &       &        &       \\
+        & Linux  & 7.21  & 95.71 & 3507.75 & 456.25  \\
 \hline
 \multirow{4}{*}{\rotatebox{90}{512B}} &
           VPP-1  & 5.79  & 52.02 & 264.75 & 18.45  \\
         & VPP-4  & 6.61  & 17.80 & 793.65 & 64.10  \\
         & VPP-10 & 8.00  & 1.56  & 49.75  & 17.15  \\
-        & Linux  &       &       &       &       \\
+        & Linux  & 7.32  & 63.20 & 3017.60 & 287.65  \\
 \hline
 \multirow{4}{*}{\rotatebox{90}{889B}} &
           VPP-1  &  5.82 & 21.93 & 324.95 & 33.50 \\
         & VPP-4  &  6.62 & 1.56  & 65.25  & 22.60 \\
         & VPP-10 &  8.05 & 1.56  & 44.10  & 17.90  \\
-        & Linux  &       &       &       &       \\
+        & Linux  &  7.43 & 39.44 & 2838.95 & 127.05 \\
 \hline
 \multirow{4}{*}{\rotatebox{90}{1280B}} &
           VPP-1  & 5.85  & 1.61  & 71.20 & 24.95 \\
         & VPP-4  & 6.59  & 1.56  & 51.60 & 21.25 \\
         & VPP-10 & 7.98  & 1.56  & 41.60 & 19.95 \\
-        & Linux  &       &       &       &       \\
+        & Linux  & 7.15  & 35.39 & 5840.10 & 313.60  \\
 \hline
 \multirow{4}{*}{\rotatebox{90}{1518B}} &
           VPP-1  & 5.86  & 1.57  & 48.65 & 26.90 \\
         & VPP-4  & 6.59  & 1.56  & 47.80 & 20.60 \\
         & VPP-10 & 8.10  & 1.56  & 39.00 & 19.45 \\
-        & Linux  &       &       &       &       \\
+        & Linux  & 7.09  & 26.47 & 7408.65 &  350.9  \\
 \hline
 \end{tabular}
 \label{tab:nat-40g}
 \end{table}
+
+As shown in the energy efficiency graph in Fig.~\ref{fig:nat-40g}, Linux was the least energy-efficient option, performing worse than any of the VPP configurations.
+Even VPP-1 showed slightly lower efficiency compared to the other VPP setups.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/consumption-nat-40g.png}
+    \caption{Energy efficiency per delivered data in NAT 40\,Gbit/s.}
+    \label{fig:nat-40g}
+\end{figure}
 

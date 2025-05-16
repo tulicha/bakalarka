@@ -147,7 +147,7 @@ The corresponding results are visualized in Figure~\ref{fig:bi-10g}.
 As with the previous test, the results presented in Table~\ref{tab:bidirectional-25g} more closely resemble those of the one-way 40\,Gbit/s scenario.  
 Since Linux was unable to deliver all packets in that test, it is not surprising that even more packets were dropped in this case.  
 Interestingly, in all VPP configurations where packet loss occurred, the percentage of dropped packets was slightly lower compared to the one-way 40\,Gbit/s test, 
-despite the higher total throughput of 50\,Gbi/s.  
+despite the higher total throughput of 50\,Gbit/s.  
 One possible explanation is that bidirectional forwarding leads to more balanced utilization of RX queues across multiple cores.  
 Moreover, in scenarios without packet loss, VPP maintained stable latency values -- although increased compared to the previous 10\,Gbit/s bidirectional experiment.
 

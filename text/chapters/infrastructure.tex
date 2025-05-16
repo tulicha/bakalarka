@@ -12,14 +12,11 @@ The illustration of this hardware setup is shown in fig. \ref{fig:hardware-setup
 \end{figure}
 
 The Device Under Test (DUT) is the network device being evaluated during testing. 
-It is configured with a specific network stack and settings based on measurement scenario 
-and serves as the focus of performance and behavior analysis in a controlled test environment. 
+It is configured with a specific network stack and settings based on measurement scenario.
 The DUT is responsible for processing network traffic and responding to the test conditions set by the measurement device.
 Additionally, the electrical power consumption of the DUT is monitored and measured during the tests to assess its energy efficiency under varying loads.
 The hardware of DUT is shown in table \ref{tab:hardware_dut}.
 
-%This template is horrible and broken!
-\newpage
 The Tester (Measurement Device), on the other hand, is responsible in generating the network traffic and capturing the responses from the DUT.
 Its physical features are shown in table \ref{tab:hardware_tester}. 
 
@@ -68,5 +65,4 @@ Its physical features are shown in table \ref{tab:hardware_tester}.
 
 The DUT is running Debian GNU/Linux 12 (Bookworm) x86\_64 with Linux kernel version \textit{6.1.0-32-amd64}, VPP v25.02-release, and DPDK version 24.11.1. 
 This kernel version is the current standard long-term support (LTS) release provided with Debian 12 (Bookworm) and was used for all tests involving the Linux networking stack.
-
 The tester generates traffic using Cisco TRex version 3.06.

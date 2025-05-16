@@ -199,6 +199,8 @@ The RX buffer is implemented as a ring queue.
 Once the packet has been saved, the corresponding interrupt request (IRQ) is triggered to notify the CPU that one or more packets have arrived in that queue. 
 Then, the corresponding IRQ handler is executed, which acknowledges the interrupt and calls the \textit{napi\_schedule} and \textit{\_\_raise\_softirq\_irqoff} functions.
 
+%broken xelatex
+\newpage
 The first function marks the associated \texttt{napi\_struct}%
 \footnote{\texttt{napi\_struct} represents a NAPI context associated with a specific receive queue of a network device.}
  as ready for processing, while the second one raises a software interrupt (SoftIQR) specifically intended for processing incoming packets. 
