@@ -31,7 +31,7 @@ Gallatin et al.~\cite{gallatin1999trapeze} discovered
 %\footnote{kap. 3.3 obr. 6} 
 that if MTU is 1500 bytes, then interrupt handling accounts for 20\% - 25\% of receiver packet-processing overhead.
 Another disadvantage of tradidtional packet processing is the inefficient handling of cache memory; the processing of the packets one by one in response to
-interrupts leads to frequent cache misses in both cache and inctruction caches.~\cite{cox2000profiling} 
+interrupts leads to frequent cache misses in both cache and instruction caches.~\cite{cox2000profiling} 
 %\footnote{kap. 4.2}
 
 %-----------------------------------------------------
@@ -60,7 +60,7 @@ These techniques include:
 \begin{itemize}
   \item \textbf{Lock-Free Multi-Threading}
 is a programming technique that leverages modern multi-core CPUs to increase system performance. In network applications, parallelism is achieved by running multiple threads in the same time. 
-Ideally, the more threads are used, the better the system performance but only up to a saturation point beyond which additional threads bring no gainns. 
+Ideally, the more threads are used, the better the system performance but only up to a saturation point beyond which additional threads bring no gains. 
 However, to reach this ideal performance, traditional synchronization mechanisms such as mutexes and semaphores must be avoided, as they introduce delays due to thread contention. 
 Instead, lock-free architectures have to be used, allowing threads to operate independently without blocking each other. 
 In the context of VPP this approach is enabled by hardware features like multi-queue NICs, 
