@@ -2,7 +2,7 @@ The testing infrastructure has been implemented as recomended in RFC 2544~\cite{
 It consists of a device under test (DUT), connected to a measurement device called Tester\footnote{The hardware used in this testing setup was loaned free of charge for the purposes of this bachelor thesis by Silicon Hill club.}.
 
 The Device Under Test (DUT) and the measurement device are connected using 100~Gbit capable cables, preventing any potential bottlenecks in the connection.
-The illustration of this hardware setup is shown in fig. \ref{fig:hardware-setup}
+The illustration of this hardware setup is shown in Fig. \ref{fig:hardware-setup}
 
 \begin{figure}[!htbp]
     \centering
@@ -15,10 +15,10 @@ The Device Under Test (DUT) is the network device being evaluated during testing
 It is configured with a specific network stack and settings based on measurement scenario.
 The DUT is responsible for processing network traffic and responding to the test conditions set by the measurement device.
 Additionally, the electrical power consumption of the DUT is monitored and measured during the tests to assess its energy efficiency under varying loads.
-The hardware of DUT is shown in table \ref{tab:hardware_dut}.
+The hardware of DUT is shown in Table \ref{tab:hardware_dut}.
 
 The Tester (Measurement Device), on the other hand, is responsible in generating the network traffic and capturing the responses from the DUT.
-Its physical features are shown in table \ref{tab:hardware_tester}. 
+Its physical features are shown in Table \ref{tab:hardware_tester}. 
 
 \begin{table}[h!]
 \centering
@@ -33,7 +33,7 @@ Its physical features are shown in table \ref{tab:hardware_tester}.
 \hline
 \textbf{Cores} & 10 physical cores each (1 thread/core) \\
 \hline
-\textbf{Memory (RAM)} & TODO! Size, type, speed \\
+\textbf{Memory (RAM)} & 256 GB of DDR4 ECC \\
 \hline
 \textbf{NIC} & Mellanox ConnectX-6 Dx (Dual-port) \\
 \hline
@@ -55,7 +55,7 @@ Its physical features are shown in table \ref{tab:hardware_tester}.
 \hline
 \textbf{Cores} & 12 physical cores each (2 threads/core)\\
 \hline
-\textbf{Memory (RAM)} & TODO! Size, type, speed \\
+\textbf{Memory (RAM)} & 384 GB DDR4 ECC\\
 \hline
 \textbf{NIC} & 2x Mellanox ConnectX-5 \\
 \hline

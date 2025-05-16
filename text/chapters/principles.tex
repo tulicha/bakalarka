@@ -1,5 +1,5 @@
 %\begin{chapterabstract}
-This section describes the fundamental principles behind the Vector Packet Processing (VPP) technology, which aims to enable efficient and high-performance network packet processing. 
+This section describes the fundamental principles behind the Vector Packet Processing (VPP) technology, which aims to enable efficient and high performance network packet processing. 
 VPP is built on modern programming and architectural principles that allow maximum utilization of contemporary hardware, particularly in parallel processing and memory access optimization.
 %\end{chapterabstract}
 
@@ -135,7 +135,7 @@ Input nodes are used for input of data and internal nodes are used for vector pr
 When a vector of packets is prepared by input node, it is then pushed through the internal nodes. 
 During processing, the vector may be split if the batch contains packets of different protocols or types, as they may need to follow different paths through the graph.
 When the original vector is completely processed, the process repeats.
-Illustration of this Processing Graph is shown in fig. \ref{fig:processing-graph}.
+Illustration of this Processing Graph is shown in Fig. \ref{fig:processing-graph}.
 
 \begin{figure}[!htbp]
     \centering
@@ -242,7 +242,7 @@ The NIC then reads the descriptors from the head of the queue, fetches the packe
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.99\linewidth]{images/dpdk-vs-linux.png}
-    \caption{Diagram illustrating the differences in packet handling between the Linux Network Stack and DPDK}
+    \caption{Diagram illustrating the differences in packet handling between the Linux Network Stack and DPDK~\cite{linux-packet-input, linux-rss, intel-core-utilization-2025, intel-pcie-traffic-2025}}
     \label{fig:dpdk}
 \end{figure}
 
