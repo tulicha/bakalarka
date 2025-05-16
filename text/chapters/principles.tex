@@ -37,7 +37,7 @@ interrupts leads to frequent cache misses in both cache and inctruction caches.~
 %-----------------------------------------------------
 \subsection{An Introduction to VPP}
 
-Vector Packet Processing (VPP) is a multi-platform network stack that operates at layers 2-4 of the ISO/OSI model and is developed by the FD.io project. 
+Vector Packet Processing is a multi-platform network stack that operates at layers 2-4 of the ISO/OSI model and is developed by the FD.io project. 
 It consists of a set of forwarding vertices arranged in an oriented graph and auxiliary software and provides out-of-the-box switch/router functionality.
 Unlike traditional network stacks, which run in the kernel, VPP operates in user space.
 
@@ -46,7 +46,7 @@ and processes the entire vector through a VPP node-graph one node at a time. Eac
 This approach reduces cache misses and spreads fixed overhead costs across multiple packets, lowering the average processing cost per packet. 
 Additionally, it allows VPP to take advantage of multiple cores, enabling parallel processing, which significantly improves overall performance.
 
-Vector Packet Processing (VPP) runs on common off-the-shelf hardware (COTS), ensuring its broad compatibility and flexibility for deployment. 
+VPP runs on common off-the-shelf hardware (COTS), ensuring its broad compatibility and flexibility for deployment. 
 It supports various architectures such as x86, ARM, and Power, and can be deployed on both standard servers and embedded devices. 
 The design of VPP is agnostic to hardware, kernel, and deployment platform, meaning it can operate across a wide range of systems, including bare metal servers, virtual machines (VMs), and containers. 
 This approach allows VPP to be deployed on widely available infrastructure without the need for specialized hardware.~\cite{fdio_what_is_vpp}
@@ -68,7 +68,7 @@ which allow each thread to handle a distinct subset of traffic, ensuring efficie
 
   \item \textbf{I/O batching}
 is a key technique used in VPP. 
-Instead of raising an interrupt for every incoming packet, the network interface card (NIC) collects multiple packets into a buffer and triggers an interrupt only when the buffer is full. 
+Instead of raising an interrupt for every incoming packet, the network interface card collects multiple packets into a buffer and triggers an interrupt only when the buffer is full. 
 This reduces the overhead caused by frequent context switching and interrupt handling. 
 VPP typically uses poll-mode drivers, which collect packets in batches without relying on interrupts. 
 Moreover, the batching technique is applied system-wide in VPP. 
@@ -88,7 +88,7 @@ Packet assignment is typically done using a hash function over packet header fie
 
   \item \textbf{Zero-Copy} 
 is a technique used to eliminate unnecessary memory copying during packet processing. 
-Instead of copying incoming packets from the network interface card (NIC) to a separate buffer via system calls, 
+Instead of copying incoming packets from the network interface card to a separate buffer via system calls, 
 the NIC writes packets directly into a pre-allocated memory region that is shared with the user-space application via Direct Memory Access (DMA). 
 This allows the application to access packet data without invoking system calls or duplicating memory, which greatly reduces CPU overhead.~\cite{LINGUAGLOSSA}
  
@@ -163,7 +163,7 @@ When Receive Side Scaling is enabled, multiple worker threads can process differ
 \subsection{DPDK and Its Role in VPP}
 The Data Plane Development Kit (DPDK) is an open-source collection of libraries and drivers designed to support high-speed packet processing in user space. 
 It was initially developed by Intel in 2010 and is now maintained as a Linux Foundation project. 
-DPDK provides a set of APIs and components that allow applications to bypass the kernel network stack and to directly access network interface cards (NICs) 
+DPDK provides a set of APIs and components that allow applications to bypass the kernel network stack and to directly access network interface cards 
 through poll-mode drivers (PMD), significantly reducing the overhead associated with traditional packet handling mechanisms.~\cite{dpdk_about}
 
 DPDK is used in VPP for interfacing with hardware. It is implemented as a plugin called \textit{dpdk-plugin}.~\cite{LINGUAGLOSSA, DR:COMMAG-18} 
@@ -173,11 +173,11 @@ While VPP supports multiple mechanisms for accessing network devices, such as \t
 %--------------------------------------------------------------------
 \subsubsection{Poll Mode Drivers}
 Poll Mode Drivers (PMDs) are a key component of the DPDK framework. Unlike traditional network drivers, which rely on interrupts to signal packet arrival, 
-PMDs continuously poll the network interface card (NIC) -- specifically its RX queue -- in a busy-loop, completely avoiding traditional interrupt-based mechanisms. 
+PMDs continuously poll the network interface card -- specifically its RX queue -- in a busy-loop, completely avoiding traditional interrupt-based mechanisms. 
 This approach allows packets to be retrieved, processed, and delivered directly to user space without kernel involvement. 
 While this results in very low latency and high throughput, it also causes constant CPU utilization on the cores assigned to polling, regardless of the traffic load.~\cite{FREITAS2022148}
 
-Not every network interface card is supported by DPDK. Each supported device requires a specific Poll Mode Driver (PMD), which must be available and compatible with the given hardware. 
+Not every network interface card is supported by DPDK. Each supported device requires a specific Poll Mode Driver, which must be available and compatible with the given hardware. 
 An up-to-date list of supported NICs and their corresponding PMDs is maintained on the official DPDK website.~\cite{dpdk-supported-nics}
 
 %--------------------------------------------------------------------
@@ -208,10 +208,10 @@ and calls their associated poll functions to retrieve and process packets from t
 
 This happens on the same CPU core that handled the original interrupt. If the system is busy or the processing takes too long, the remaining work may be handled by the \textit{ksoftirqd} kernel thread. 
 The packets may be aggregated into a single larger packet using Generic Receive Offload (GRO), or processed individually. 
-In both cases, they are passed to the IP stack via the \texttt{netif\_receive\_skb} function.
+In both cases, they are passed to the IP stack via the \textit{netif\_receive\_skb} function.
 
 The transmission path is handled in a similar manner, using ring buffers, DMA, and deferred processing. 
-However, unlike reception, packet transmission is initiated from the IP stack using the \texttt{\_\_dev\_queue\_xmit} function. 
+However, unlike reception, packet transmission is initiated from the IP stack using the \textit{\_\_dev\_queue\_xmit} function. 
 Depending on the qdisc in use, packets are either enqueued in the software queue or passed directly to the driver for transmission.
 Once a packet is selected for transmission, the driver places a descriptor into the TX ring buffer and sets up DMA so that the NIC can read the packet data from memory.
 After the NIC finishes transmitting the packet, it triggers a TX interrupt, which allows the driver to perform post-processing such as unmapping DMA buffers and freeing memory.~\cite{linux-packet-input}

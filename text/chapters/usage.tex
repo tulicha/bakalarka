@@ -13,7 +13,7 @@ It already includes enough features to be deployed in production environments.
 
 
 \subsection{Integration with the SDN/NFV Ecosystem}
-To meet the requirements of modern virtualized and cloud-native networking environments, Vector Packet Processing (VPP) was architected with a clear separation between the data plane and control plane. 
+To meet the requirements of modern virtualized and cloud-native networking environments, Vector Packet Processing was architected with a clear separation between the data plane and control plane. 
 This design choice enables its integration into SDN and NFV frameworks, where packet forwarding logic can operate independently from centralized control mechanisms. 
 VPP's modularity and userspace implementation allow it to function efficiently within dynamic, multi-tenant infrastructure, 
 while remaining compatible with orchestration systems and control-plane protocols commonly used in such deployments
@@ -27,7 +27,7 @@ VPP is implemented solely as a data-plane, meaning it is not a complete routing 
 VPP is dedicated to efficiently forwarding packets between interfaces based on routing rules and access control filters, 
 but it does not include a native control-plane or support for dynamic routing protocols such as BGP or OSPF.
 
-However, as demonstrated by the authors of the VBSR (VPP-Bird Software Router) project \cite{10819057}, 
+However, as demonstrated by the authors of the VBSR (VPP-Bird Software Router) project~\cite{10819057}, 
 it is possible to integrate VPP with additional components such as the Linux Control Plane (Linux-CP) plugin and the BIRD routing daemon. 
 Bird acting as a control-plane enables dynamic routing using protocols like BGP 
 and the Linux-CP is responsible for communication between VPP and BIRD. 

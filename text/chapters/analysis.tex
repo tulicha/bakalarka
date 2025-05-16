@@ -1,3 +1,29 @@
-One of the disadvantages of VPP is that it does not support on-the-fly hardware configuration changes and typically requires a full restart; a simple reload is not sufficient. 
-In contrast, the Linux networking stack can handle such changes at runtime, allowing CPUs to be enabled, disabled, or reassigned without interrupting network services.
+The evaluation focused on throughput, latency, packet loss, and energy efficiency under different traffic scenarios and system configurations.
+
+As demonstrated by the overall results, the Linux networking stack generally performs better under lighter loads.  
+When the packet rate is sufficiently low, the interrupt-based approach proves to be more efficient.
+Moreover, under low-traffic conditions, VPP tends to exhibit higher latency, especially when multiple receive queues are configured.  
+This may be attributed to VPP’s limited ability to fully leverage the benefits of vectorized packet processing at low volumes.  
+When a graph node is triggered -- a relatively costly operation -- incoming packets may have to wait for the current batch to complete.
+Enabling Receive Side Scaling in these scenarios can further exacerbate the issue, as limited traffic is distributed across multiple queues and workers, leading to unnecessary overhead.
+These observations proved that VPP is not optimized for handling sparse or low-throughput traffic patterns.
+
+On the other hand, when handling higher traffic volumes, VPP processes more fully populated vectors and can take full advantage of vectorization optimizations, 
+which helps amortize the per-packet processing cost.
+As demonstrated, under heavy load, VPP is able to maintain reasonable latency, while the Linux stack becomes flooded with system calls, 
+and its per-packet processing model reveals clear performance limitations.
+This is further supported by the observed packet loss in VPP, particularly under heavy NAT workloads with small frame sizes.
+It was also observed that VPP’s parallelism become truly apparent only under high-throughput conditions.
+
+A serious drawback of VPP is that it consumes nearly the same amount of energy even when there is no traffic to process.  
+While this is less noticeable under typical load conditions, it becomes highly inefficient during periods of minimal or no traffic -- 
+such as early morning hours in enterprise or residential networks -- where VPP continues polling the NIC despite having nothing to handle.
+VPP does not support on-the-fly hardware configuration changes and typically requires a full restart; a simple reload is not sufficient.  
+This further worsens its suitability for dynamic or energy-sensitive environments, where the ability to adjust to changing load conditions -- such as reduced traffic during off-peak hours -- is essential.  
+In contrast, the Linux networking stack can accommodate such changes at runtime, allowing CPUs to be enabled, disabled, or reassigned without interrupting network services.
+
+It is important to note that these measurements were conducted using synthetic traffic in a controlled environment, 
+designed to evaluate how VPP and the Linux networking stack behave under specific conditions.  
+Real-world traffic patterns, including bursts and mixed flow types, may result in different performance characteristics.
+
 
